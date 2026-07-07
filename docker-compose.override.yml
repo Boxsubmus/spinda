@@ -1,0 +1,32 @@
+services:
+  app:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile.dev
+    image: spinda-app-dev
+    volumes:
+      - ./src:/var/www/html
+    environment:
+      APP_ENV: dev
+    user: "1000:1000"   # match your host UID:GID from `id -u` / `id -g`
+  
+  webserver:
+    ports:
+      - "1337:80"
+    volumes:
+      - ./src:/var/www/html
+
+  database:
+    ports:
+      - "3306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    environment:
+      PMA_HOST: database
+      PMA_USER: app
+      PMA_PASSWORD: app
+    ports:
+      - "8081:80"
+    depends_on:
+      - database
