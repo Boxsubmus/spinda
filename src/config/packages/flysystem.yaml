@@ -1,0 +1,24 @@
+# Read the documentation at https://github.com/thephpleague/flysystem-bundle/blob/master/docs/1-getting-started.md
+flysystem:
+    storages:
+        default.storage:
+            adapter: 'local'
+
+            # It took me HOURS to figure this out, but basically flysystem sets every directory to 'private' by default, which means symfony can't read it
+            # -due to file permissions.
+            #
+            # References:
+            # https://github.com/thephpleague/flysystem-bundle/issues/158
+            # https://flysystem.thephpleague.com/docs/usage/unix-visibility/
+            visibility: 'public'
+            directory_visibility: 'public'
+            options:
+                directory: '%kernel.project_dir%/public/uploads'
+                permissions:
+                        file:
+                            public: 0o644
+                            private: 0o600
+                        dir:
+                            public: 0o755
+                            private: 0o700
+            public_url: 'http://localhost:1337/uploads'

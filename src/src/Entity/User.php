@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -30,6 +32,17 @@ class User implements UserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatarUrl = null;
+
+    /**
+     * @var Collection<int, Beatmapset>
+     */
+    #[ORM\OneToMany(targetEntity: Beatmapset::class, mappedBy: 'author')]
+    private Collection $beatmapsets;
+
+    public function __construct()
+    {
+        $this->beatmapsets = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -106,6 +119,36 @@ class User implements UserInterface
     public function setAvatarUrl(?string $avatarUrl): static
     {
         $this->avatarUrl = $avatarUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Beatmapset>
+     */
+    public function getBeatmapsets(): Collection
+    {
+        return $this->beatmapsets;
+    }
+
+    public function addBeatmapset(Beatmapset $beatmapset): static
+    {
+        if (!$this->beatmapsets->contains($beatmapset)) {
+            $this->beatmapsets->add($beatmapset);
+            $beatmapset->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBeatmapset(Beatmapset $beatmapset): static
+    {
+        if ($this->beatmapsets->removeElement($beatmapset)) {
+            // set the owning side to null (unless already changed)
+            if ($beatmapset->getAuthor() === $this) {
+                $beatmapset->setAuthor(null);
+            }
+        }
 
         return $this;
     }
