@@ -15,4 +15,4 @@
 /public/build/
 ###< pentatrion/vite-bundle ###
 
-DataFixtures/Files/
+src/DataFixtures/Files/
