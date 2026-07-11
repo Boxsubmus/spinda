@@ -16,11 +16,23 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install intl pdo pdo_mysql opcache zip \
     && pecl install xdebug && docker-php-ext-enable xdebug
 
+# Install Node.js (LTS)
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
+    && apt-get install -y nodejs \
+    && npm install -g npm@latest
+
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+# Create a user matching the host UID/GID, with a proper home dir
+RUN groupadd -g 1000 appuser \
+    && useradd -u 1000 -g appuser -m -d /home/appuser -s /bin/bash appuser \
+    && mkdir -p /home/appuser/.npm \
+    && chown -R appuser:appuser /home/appuser
+
 # Set working directory
 WORKDIR /var/www/html
+RUN chown -R appuser:appuser /var/www/html
 
 # Start PHP-FPM
 CMD ["php-fpm"]

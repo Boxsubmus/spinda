@@ -1,0 +1,8 @@
+<div>
+    {% if app.user %}
+        Logged in as: {{ app.user.getUsername() }}
+        <img src="{{ app.user.getAvatarUrl() }}">
+    {% else %}
+        Login please!
+    {% endif %}
+</div>

@@ -21,18 +21,18 @@ class HomeController extends AbstractController
         /** @var \App\Entity\User|null $user */
         $user = $this->getUser();
 
+        /*
         if ($user) {
             $beatmapSets = $repository->findAllOrderedByNewest();
 
             return $this->render("index.html.twig", [
-                'user' => $user,
                 'beatmapsets' => $beatmapSets,
                 'storage' => $this->storage,
             ]);
             // return new Response('Logged in as: ' . $user->getAvatarUrl());
         }
-
+*/
         
-        return new Response('<a href="/auth/steam">Log in with Steam</a>');
+        return $this->render("index.html.twig");
     }
 }

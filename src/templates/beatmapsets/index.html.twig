@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hyperspin - {{ beatmapset.title }}{% endblock %}
+
+{% block body %}
+
+<p>{{ beatmapset.title }}</p>
+<p>{{ beatmapset.artist }}
+<img src="{{ beatmapset.getCoverUrl(storage) }}"/>
+
+<img src="{{ beatmapset.author.getAvatarUrl() }}"/>
+<p>mapped by {{ beatmapset.author.username }}
+
+{% endblock %}

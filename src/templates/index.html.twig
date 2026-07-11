@@ -1,23 +1,5 @@
-<div>
-    Logged in as: {{ user.getUsername() }}
-    <img src="{{ user.getAvatarUrl() }}">
+{% extends 'base.html.twig' %}
 
-    {% for beatmap in beatmapsets %}
-    <div class="beatmap-grid">
-        {% for beatmapset in beatmapsets %}
-            <div class="beatmap-card">
-                {% if beatmapset.coverUrl(storage) %}
-                    <img src="{{ beatmapset.coverUrl(storage) }}" alt="{{ beatmapset.title }} cover">
-                {% else %}
-                {% endif %}
-
-                <h3>{{ beatmapset.title }}</h3>
-                <p>{{ beatmapset.artist }}</p>
-                <p>by {{ beatmapset.author.username }}</p>
-            </div>
-        {% else %}
-            <p>No beatmaps uploaded yet.</p>
-        {% endfor %}
-    </div>
-    {% endfor %}
-</div>
+{% block body %}
+<a href="/auth/steam">Log in with Steam</a>
+{% endblock %}
