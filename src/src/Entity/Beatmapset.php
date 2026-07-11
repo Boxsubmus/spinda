@@ -40,6 +40,15 @@ class Beatmapset
     #[ORM\Column]
     private ?int $favorites = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $approvedAt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -155,11 +164,55 @@ class Beatmapset
 
     public function getCoverUrl(StorageService $storage): string
     {
-        return $storage->getCoverUrl($this->id);
+        $path = sprintf('beatmaps/%d/covers/list.jpg', $this->id);
+        return $storage->getPublicUrl($path);
     }
 
     public function hasCover(StorageService $storage): bool
     {
-        return $storage->coverExists($this->id);
+        $path = sprintf('beatmaps/%d/covers/list.jpg', $this->id);
+        return $storage->$storage->fileExists($path);
+    }
+
+    public function getBannerUrl(StorageService $storage): string
+    {
+        $path = sprintf('beatmaps/%d/covers/banner.png', $this->id);
+        return $storage->getPublicUrl($path);
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getApprovedAt(): ?\DateTimeImmutable
+    {
+        return $this->approvedAt;
+    }
+
+    public function setApprovedAt(?\DateTimeImmutable $approvedAt): static
+    {
+        $this->approvedAt = $approvedAt;
+
+        return $this;
     }
 }

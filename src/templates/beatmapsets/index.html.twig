@@ -5,29 +5,40 @@
 {% block body %}
 
 {# page thing #}
-<div class="flex flex-col mx-auto my-4">
-    <div class="flex">
-        <div class="flex flex-row gap-4">
+<div class="flex flex-col mx-auto my-4 w-7xl">
+
+    {# header #}
+    <div class="relative grid rounded-lg overflow-hidden w-full">
+        {# banner cover #}
+        <div class="absolute inset-0 bg-cover bg-center"
+            style="background-image: url('{{ beatmapset.getBannerUrl(storage) }}');">
+        </div>
+
+        {# dark overlay so text stays readable #}
+        <div class="absolute inset-0" style="background-color: hsla(0, 0%, 0%, 0.6);"></div>
+
+        {# Content starts here #}
+        <div class="relative z-10 flex flex-row gap-4 p-4">
             <img class="rounded-lg shadow w-52 h-52" src="{{ beatmapset.getCoverUrl(storage) }}"/>
 
-            <div class="grid content-between py-4">
-                    {# title and artist #}
-                    <div class="flex flex-col">
-                        <p class="text-4xl">{{ beatmapset.title }}</p>
-                        <p class="text-3xl">{{ beatmapset.artist }}</p>
-                    </div>
+            <div class="grid content-between text-shadow-lg">
+                {# title and artist #}
+                <div class="flex flex-col">
+                    <p class="text-6xl">{{ beatmapset.title }}</p>
+                    <p class="text-4xl">{{ beatmapset.artist }}</p>
+                </div>
 
-                    {# mapper #}
-                    <div class="flex items-start gap-2">
-                        <img class="rounded-lg w-16 shadow" src="{{ beatmapset.author.getAvatarUrl() }}"/>
-                        <div class="flex flex-col justify-center">
-                            <div>
-                                mapped by
-                                <a class="font-semibold">{{ beatmapset.author.username }}</a>
-                            </div>
-                            <p>submitted June 11, 2026</p>
+                {# mapper #}
+                <div class="flex items-center gap-2.5">
+                    <img class="rounded-lg w-16 shadow" src="{{ beatmapset.author.getAvatarUrl() }}"/>
+                    <div class="flex flex-col justify-center">
+                        <div>
+                            mapped by
+                            <a class="font-semibold">{{ beatmapset.author.username }}</a>
                         </div>
+                        <p>submitted {{ beatmapset.createdAt|date('F j, Y') }}</p>
                     </div>
+                </div>
             </div>
         </div>
     </div>

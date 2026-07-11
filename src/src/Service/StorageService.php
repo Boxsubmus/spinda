@@ -118,24 +118,6 @@ class StorageService
     }
 
     /**
-     * Get cover URL for a beatmap
-     */
-    public function getCoverUrl(int $beatmapId): string
-    {
-        $path = sprintf('beatmaps/%d/covers/list.jpg', $beatmapId);
-        return $this->getPublicUrl($path);
-    }
-
-    /**
-     * Check if cover exists
-     */
-    public function coverExists(int $beatmapId): bool
-    {
-        $path = sprintf('beatmaps/%d/covers/list.jpg', $beatmapId);
-        return $this->storage->fileExists($path);
-    }
-
-    /**
      * Convert image to JPG and return the image data as a string
      */
     private function convertToJpg(string $sourcePath): string

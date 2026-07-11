@@ -1,10 +1,16 @@
 @import "tailwindcss";
 @import "torus.css";
 
+@custom-variant dark (&);
+
 @theme {
   --font-sans: "Torus", ui-sans-serif, system-ui, sans-serif;
 }
 
+:root {
+  color-scheme: dark;
+}
+
 body {
-  background-color: #eeeeee;
+  background-color: bg-gray-900;
 }
