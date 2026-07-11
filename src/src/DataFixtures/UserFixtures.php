@@ -16,6 +16,7 @@ class UserFixtures extends Fixture
         $user->setAvatarUrl("https://avatars.fastly.steamstatic.com/d34123aed6aa056e70725c849cdc0968cff8e75b_full.jpg");
         $user->setCreatedAt(new \DateTimeImmutable());
         $user->setMappingPoints(0);
+        $user->setCountryAcronym('US');
 
         $manager->persist($user);
 

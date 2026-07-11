@@ -45,6 +45,9 @@ class User implements UserInterface
     #[ORM\Column]
     private ?int $mappingPoints = null;
 
+    #[ORM\Column(length: 2)]
+    private ?string $countryAcronym = null;
+
     public function __construct()
     {
         $this->beatmapsets = new ArrayCollection();
@@ -179,6 +182,18 @@ class User implements UserInterface
     public function setMappingPoints(int $mappingPoints): static
     {
         $this->mappingPoints = $mappingPoints;
+
+        return $this;
+    }
+
+    public function getCountryAcronym(): ?string
+    {
+        return $this->countryAcronym;
+    }
+
+    public function setCountryAcronym(string $countryAcronym): static
+    {
+        $this->countryAcronym = $countryAcronym;
 
         return $this;
     }
