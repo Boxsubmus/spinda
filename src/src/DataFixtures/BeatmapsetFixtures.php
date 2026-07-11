@@ -6,10 +6,11 @@ use App\Entity\Beatmapset;
 use App\Entity\User;
 use App\Service\StorageService;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class AppFixtures extends Fixture
+class BeatmapsetFixtures extends Fixture implements DependentFixtureInterface
 {
     public function __construct(
         private readonly StorageService $storage
@@ -17,12 +18,7 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        // Create user
-        $user = new User();
-        $user->setSteamid("76561198799361364");
-        $user->setUsername("Starpelly");
-        $user->setAvatarUrl("https://avatars.fastly.steamstatic.com/d34123aed6aa056e70725c849cdc0968c8ffc75e_full.jpg");
-        $manager->persist($user);
+        $user = $this->getReference('user_starpelly', User::class);
 
         // Create beatmapset (need ID for cover)
         $map = new Beatmapset();
@@ -32,6 +28,8 @@ class AppFixtures extends Fixture
         $map->setLikes(0);
         $map->setDislikes(0);
         $map->setFavorites(0);
+        $map->setCreatedAt(new \DateTimeImmutable());
+        $map->setUpdatedAt(new \DateTimeImmutable());
 
         $beatmapFile = new UploadedFile(
             __DIR__ . '/Files/saitama-2000.zip',
@@ -70,5 +68,10 @@ class AppFixtures extends Fixture
         echo "   Beatmap URL: {$map->getFileUrl($this->storage)}\n";
         echo "   Cover URL: {$map->getCoverUrl($this->storage)}\n";
         echo "   Cover path: {$coverResult->path}\n";
+    }
+
+    public function getDependencies(): array
+    {
+        return [UserFixtures::class];
     }
 }

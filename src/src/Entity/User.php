@@ -39,6 +39,12 @@ class User implements UserInterface
     #[ORM\OneToMany(targetEntity: Beatmapset::class, mappedBy: 'author')]
     private Collection $beatmapsets;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column]
+    private ?int $mappingPoints = null;
+
     public function __construct()
     {
         $this->beatmapsets = new ArrayCollection();
@@ -149,6 +155,30 @@ class User implements UserInterface
                 $beatmapset->setAuthor(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getMappingPoints(): ?int
+    {
+        return $this->mappingPoints;
+    }
+
+    public function setMappingPoints(int $mappingPoints): static
+    {
+        $this->mappingPoints = $mappingPoints;
 
         return $this;
     }
