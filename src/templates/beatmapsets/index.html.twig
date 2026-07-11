@@ -17,7 +17,7 @@
         {# dark overlay so text stays readable #}
         <div class="absolute inset-0" style="background-color: hsla(0, 0%, 0%, 0.6);"></div>
 
-        {# Content starts here #}
+        {# Content #}
         <div class="relative z-10 flex flex-row gap-4 p-4">
             <img class="rounded-lg shadow w-52 h-52" src="{{ beatmapset.getCoverUrl(storage) }}"/>
 
@@ -40,6 +40,22 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    {# Buttons #}
+    <div class="flex flex-wrap bg-gray-800">
+        <div class="m-4">
+            <a class="flex items-center justify-between height-4" href="beatmapsets/{{ beatmapset.id }}/download">
+                {# content #}
+                <span class="flex flex-col justify-center">
+                    Download
+                </span>
+                {# icon #}
+                <span>
+                    <i class="fa-solid fa-download"></i>
+                </span>
+            </a>
         </div>
     </div>
 
