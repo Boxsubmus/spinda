@@ -1,0 +1,10 @@
+@import "tailwindcss";
+@import "torus.css";
+
+@theme {
+  --font-sans: "Torus", ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background-color: #eeeeee;
+}

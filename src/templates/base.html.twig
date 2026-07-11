@@ -20,8 +20,13 @@
         {% endif %}
     </head>
     <body>
-    {% block main_header %}{{ include('_layout/sidebar.twig') }}{% endblock %}
-
-        {% block body %}{% endblock %}
+        <div class="flex h-screen">
+            {% block main_header %}{{ include('_layout/sidebar.twig') }}{% endblock %}
+            
+            <div class="flex flex-col grow">
+                
+                {% block body %}{% endblock %}
+            </div>
+        </div>
     </body>
 </html>
