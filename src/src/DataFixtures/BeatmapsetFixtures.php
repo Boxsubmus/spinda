@@ -18,22 +18,29 @@ class BeatmapsetFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager): void
     {
+        $this->makeBeatmap("Saitama 2000", "Taiko no Tatsujin", 'saitama-2000.zip', 'saitama-2000-cover.png', $manager);
+        $this->makeBeatmap("Spam YTPMV", "KrazedDonut", 'spamytpmv.zip', 'spamytpmv.jpg', $manager);
+    }
+
+    private function makeBeatmap(string $title, string $artist, string $zip, string $art, ObjectManager $manager): void
+    {
         $user = $this->getReference('user_starpelly', User::class);
 
         // Create beatmapset (need ID for cover)
         $map = new Beatmapset();
-        $map->setTitle("Saitama 2000");
-        $map->setArtist("Taiko no Tatsujin");
+        $map->setTitle($title);
+        $map->setArtist( $artist);
         $map->setAuthor($user);
         $map->setLikes(0);
         $map->setDislikes(0);
         $map->setFavorites(0);
         $map->setCreatedAt(new \DateTimeImmutable());
         $map->setUpdatedAt(new \DateTimeImmutable());
+        $map->setDownloads(0);
 
         $beatmapFile = new UploadedFile(
-            __DIR__ . '/Files/saitama-2000.zip',
-            'saitama-2000.zip',
+            __DIR__ . '/Files/' . $zip,
+            $zip,
             'application/zip',
             null,
             true
@@ -42,6 +49,7 @@ class BeatmapsetFixtures extends Fixture implements DependentFixtureInterface
         // Store beatmap
         $beatmapResult = $this->storage->storeBeatmap($beatmapFile);
         $map->setFileHash($beatmapResult->hash);
+        $map->setFilesize($beatmapResult->size);
         // $map->setFileExtension($beatmapResult->extension);
 
         $manager->persist($map);
@@ -49,8 +57,8 @@ class BeatmapsetFixtures extends Fixture implements DependentFixtureInterface
 
         // Now store cover file using the ID
         $coverFile = new UploadedFile(
-            __DIR__ . '/Files/saitama-2000-cover.png',
-            'saitama-2000-cover.png',
+            __DIR__ . '/Files/' . $art,
+            $art,
             'image/png',
             null,
             true

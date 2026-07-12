@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 final class Helpers
 {
 /// Warning: This calls an external api every time! Using sparingly!
-function get_country_from_ip(string $ip): string
+public static function get_country_from_ip(string $ip): string
 {
     $country = "CX"; // We'll just assume US by default because we're xenophobic
 
@@ -26,7 +26,7 @@ function get_country_from_ip(string $ip): string
 }
 
 // Relies on cloudflare, but might be better than get_country_from_ip()???
-function request_country(?Request $request = null, ?RequestStack $requestStack = null): ?string
+public static function request_country(?Request $request = null, ?RequestStack $requestStack = null): ?string
 {
     if ($request === null) {
         if ($requestStack === null) {
@@ -38,7 +38,7 @@ function request_country(?Request $request = null, ?RequestStack $requestStack =
     return $request?->headers->get('CF_IPCOUNTRY');
 }
 
-function country_name_from_acronym(string $acronym): string
+public static function country_name_from_acronym(string $acronym): string
 {
     $countries = [
         'A1' => 'Anonymous Proxy',
@@ -297,5 +297,14 @@ function country_name_from_acronym(string $acronym): string
     ];
 
     return $countries[$acronym];
+}
+
+public static function flag_url($countryCode): string
+{
+    $chars = str_split($countryCode);
+    $hexEmojiChars = array_map(fn ($chr) => dechex(mb_ord($chr) + 127397), $chars);
+    $baseFileName = implode('-', $hexEmojiChars);
+
+    return "/images/flags/{$baseFileName}.svg";
 }
 }

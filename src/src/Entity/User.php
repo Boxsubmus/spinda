@@ -197,4 +197,14 @@ class User implements UserInterface
 
         return $this;
     }
+
+    public function getCountryName(): ?string
+    {
+        return \App\Helpers::country_name_from_acronym($this->countryAcronym);
+    }
+
+    public function getCountryFlagUrl(): ?string
+    {
+        return \App\Helpers::flag_url($this->countryAcronym);
+    }
 }

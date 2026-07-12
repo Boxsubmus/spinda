@@ -10,11 +10,6 @@
 
 <div class="flex flex-col shadow">
 
-    {# state #}
-    <div class="bg-zinc-800 p-3">
-
-    </div>
-
     {# header #}
     <div class="relative grid overflow-hidden w-full">
         
@@ -34,8 +29,8 @@
             <div class="grid content-between text-shadow-lg grow">
                 {# title and artist #}
                 <div class="flex flex-col">
-                    <p class="text-6xl">{{ beatmapset.title }}</p>
-                    <p class="text-4xl">{{ beatmapset.artist }}</p>
+                    <p class="text-5xl">{{ beatmapset.title }}</p>
+                    <p class="text-3xl">{{ beatmapset.artist }}</p>
                 </div>
 
                 {# mapper #}
@@ -44,7 +39,7 @@
                     <div class="flex flex-col justify-center">
                         <div>
                             mapped by
-                            <a class="font-semibold">{{ beatmapset.author.username }}</a>
+                            <a class="font-semibold" href="{{  path('app_user', {id: beatmapset.author.id}) }}">{{ beatmapset.author.username }}</a>
                         </div>
                         <p>submitted {{ beatmapset.createdAt|date('F j, Y') }}</p>
                     </div>
@@ -78,12 +73,12 @@
 
                         <div class="w-full max-w-sm mx-auto">
                             <div class="flex items-center justify-between mb-2">
-                                <button class="flex items-center gap-2 text-green-300 hover:text-green-300 transition-colors">
+                                <button class="flex items-center gap-2 text-green-300">
                                 <i class="fa-solid fa-thumbs-up text-lg"></i>
                                 <span class="text-sm">{{ beatmapset.likes }}</span>
                                 </button>
 
-                                <button class="flex items-center gap-2 text-red-400 hover:text-red-600 transition-colors">
+                                <button class="flex items-center gap-2 text-red-400">
                                 <span class="text-sm">{{ beatmapset.dislikes }}</span>
                                 <i class="fa-solid fa-thumbs-down text-lg"></i>
                                 </button>

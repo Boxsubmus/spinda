@@ -11,7 +11,7 @@ class StorageService
         'beatmap' => [
             'directory' => 'beatmaps',
             'allowed_extensions' => ['zip'],
-            'max_size' => 10 * 1024 * 1024, // 10MB
+            'max_size' => 15 * 1024 * 1024, // 10MB
         ],
     ];
 
@@ -31,7 +31,7 @@ class StorageService
         $this->validateFile($file, $config, $extension);
 
         $hash = hash_file('sha256', $file->getRealPath());
-        $path = $this->buildHashPath($hash, 'beatmaps', $extension);
+        $path = $this->buildHashPath($hash, 'beatmap_files', $extension);
 
         // Check for duplicate
         if ($this->storage->fileExists($path)) {
