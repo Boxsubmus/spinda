@@ -4,13 +4,14 @@
 
 {% block body %}
 
-<div class="bg-zinc-800">
+<div class="flex flex-col gap-4">
+<div class="bg-zinc-800 rounded-2xl overflow-hidden shadow">
     <div class="h-64" style="background-image: url('https://assets.ppy.sh/user-profile-covers/11549458/bfc349c01b3c83000fd63f9d5cf0a0b683c5ccb1f22cdc3e6b223a23f9cf198f.png');">
     </div>
 
     <div class="flex flex-row gap-6 h-28">
 
-        <img class="rounded-lg w-40 h-40 shadow-lg self-end mb-4 ml-8" src="{{ user.avatarUrl }}"/>
+        <img class="rounded-2xl w-40 h-40 shadow-lg self-end mb-4 ml-8" src="{{ user.avatarUrl }}"/>
 
         <div class="my-auto text-shadow-xs flex flex-col gap-1">
             <span class="text-3xl">{{ user.username }}</span>
@@ -22,5 +23,45 @@
 
     </div>
 
+    <div class="bg-zinc-800 inset-shadow-xs inset-shadow-zinc-500">
+        <div class="p-4">
+            Joined {{ user.createdAt|date('F j, Y') }}
+            {{ user.mappingPoints }} mapping points
+        </div>
+    </div>
+</div>
+
+<div class="bg-zinc-800 rounded-2xl overflow-hidden shadow p-8">
+    <h1 class="text-3xl">Maps</h1>
+
+    <div class="p-4">
+        <div class="grid grid-cols-2 gap-3">
+            {% for beatmap in beatmaps %}
+                <a >
+                    <div class="flex flex-row gap-4">
+                        <img class="w-32 rounded-xl" src="{{ beatmap.getCoverUrl(storage) }}">
+                        <div class="flex flex-col text-shadow-sm">
+                            <span class="text-2xl font-semibold">{{ beatmap.title }}</span>
+                            <span class="text-xl">{{ beatmap.artist }}</span>
+                            <span class="text-sm">
+                                mapped by
+                                <span class="font-semibold">{{ beatmap.author.username }}</span>
+                            </span>
+                            
+                            <div class="grow"></div>
+
+                            <div class="flex">
+                                <span class="bg-pink-400 py-0 px-3 text-shadow-sm rounded-3xl text-center text-zinc-800 font-semibold">
+                                    LOVED
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 </div>
 {% endblock %}
