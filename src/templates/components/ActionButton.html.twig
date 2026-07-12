@@ -1,17 +1,26 @@
-<a class="flex items-center justify-between height-4 cursor-pointer
-    bg-yellow-600 transition hover:bg-yellow-400
-    p-3 rounded shadow min-w-32 gap-3 h-12
+{% set classes %}
+flex items-center justify-between height-4 cursor-pointer
+    bg-cyan-600 transition hover:bg-cyan-400
+    p-3 px-4 rounded shadow gap-3 h-10
     text-shadow-sm
-    "
-    href="{{ url }}">
+    items-center
+{% endset %}
 
-    {# content #}
-    <span class="flex flex-col justify-center ml-2 font-semibold">
-        {{ label }}
-    </span>
+{% set content %}
+    {% if label is not null %}
+        <span class="flex flex-col justify-center font-semibold">{{ label }}</span>
+    {% endif %}
+    <span class="text-xl justify-center flex"><i class="m-0 fa-solid {{ icon }}"></i></span>
+{% endset %}
 
-    {# icon #}
-    <span class="text-xl mr-1.5">
-        <i class="fa-solid {{ icon }}"></i>
-    </span>
-</a>
+{% if url is not null %}
+    <a class="{{ classes }}" href="{{ url }}" {{ attributes }}>
+        {{ content }}
+    </a>
+    {% else %}
+    <button class="{{ classes }}" type="{{ type }}"
+        {{ disabled ? 'disabled' : '' }}
+        {{  attributes }}>
+        {{  content }}
+    </button>
+{% endif %}

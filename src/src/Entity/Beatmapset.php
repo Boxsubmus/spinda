@@ -49,6 +49,9 @@ class Beatmapset
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $approvedAt = null;
 
+    #[ORM\Column]
+    private ?int $downloads = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -212,6 +215,18 @@ class Beatmapset
     public function setApprovedAt(?\DateTimeImmutable $approvedAt): static
     {
         $this->approvedAt = $approvedAt;
+
+        return $this;
+    }
+
+    public function getDownloads(): ?int
+    {
+        return $this->downloads;
+    }
+
+    public function setDownloads(int $downloads): static
+    {
+        $this->downloads = $downloads;
 
         return $this;
     }

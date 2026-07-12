@@ -1,16 +1,26 @@
 {% extends 'base.html.twig' %}
 
+{% set total = beatmapset.likes + beatmapset.dislikes %}
+{% set likePercent = total > 0 ? (beatmapset.likes / total * 100) : 50 %}
+{% set dislikePercent = 100 - likePercent %}
+
 {% block title %}Hyperspin - {{ beatmapset.title }}{% endblock %}
 
 {% block body %}
 
 <div class="flex flex-col shadow">
+
+    {# state #}
+    <div class="bg-zinc-800 p-3">
+
+    </div>
+
     {# header #}
     <div class="relative grid overflow-hidden w-full">
         
         {# banner cover #}
         <div class="absolute inset-0 bg-cover bg-center"
-            {#style="background-image: url('{{ beatmapset.getBannerUrl(storage) }}');"#}
+            {# style="background-image: url('{{ beatmapset.getBannerUrl(storage) }}');" #}
             >
         </div>
 
@@ -21,7 +31,7 @@
         <div class="relative z-10 flex flex-row gap-4 p-4">
             <img class="rounded-lg shadow w-52 h-52" src="{{ beatmapset.getCoverUrl(storage) }}"/>
 
-            <div class="grid content-between text-shadow-lg">
+            <div class="grid content-between text-shadow-lg grow">
                 {# title and artist #}
                 <div class="flex flex-col">
                     <p class="text-6xl">{{ beatmapset.title }}</p>
@@ -40,10 +50,58 @@
                     </div>
                 </div>
             </div>
+
+            {# box thing #}
+            <div class="flex flex-col relative gap-4">
+
+                {# status #}
+                <div class="flex mx-auto mr-0">
+                    <span class="bg-gray-500 py-2 px-10 text-shadow-sm rounded-3xl">
+                        ARCHIVE
+                    </span>
+                </div>
+
+                {# box #}
+                <div class="grid grid-cols-2 gap-1">
+                    
+                    <span class="bg-zinc-800 px-4 p-2 rounded">
+                        <i class="fa-solid fa-download"></i>
+                        {{ beatmapset.downloads }}
+                    </span>
+
+                    <span class="bg-zinc-800 px-4 p-2 rounded">
+                        <i class="fa-solid fa-heart"></i>
+                        {{ beatmapset.favorites }}
+                    </span>
+
+                    <div class="col-span-2 bg-zinc-800 p-4 w-80 rounded">
+
+                        <div class="w-full max-w-sm mx-auto">
+                            <div class="flex items-center justify-between mb-2">
+                                <button class="flex items-center gap-2 text-green-300 hover:text-green-300 transition-colors">
+                                <i class="fa-solid fa-thumbs-up text-lg"></i>
+                                <span class="text-sm">{{ beatmapset.likes }}</span>
+                                </button>
+
+                                <button class="flex items-center gap-2 text-red-400 hover:text-red-600 transition-colors">
+                                <span class="text-sm">{{ beatmapset.dislikes }}</span>
+                                <i class="fa-solid fa-thumbs-down text-lg"></i>
+                                </button>
+                            </div>
+
+                            <div class="w-full h-2 bg-transparent rounded-full overflow-hidden flex gap-0.5">
+                                <div class="bg-green-300 h-full transition-all rounded" style="width: {{ likePercent }}%"></div>
+                                <div class="bg-red-400 h-full transition-all rounded" style="width: {{ dislikePercent }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
         </div>
 
-        <div class="z-10 flex flex-row p-4 gap-2" style="background-color: hsla(0, 0%, 0%, 0.2);">
-            {# Buttons #}
+        {# Buttons #}
+        <div class="z-10 flex flex-row p-4 gap-2" style="background-color: hsla(0, 0%, 0%, 0.3);">
             <twig:ActionButton
                 url="{{  path('app_beatmapsets_download', {id: beatmapset.id}) }}"
                 label="Download"
@@ -51,15 +109,27 @@
             />
 
             <twig:ActionButton
-                url=""
                 label="Feature"
                 icon="fa-award"
+            />
+
+            <div class="grow"></div>
+
+            <twig:ActionButton
+                icon="fa-heart"
             />
         </div>
     </div>
 
-    <div class="bg-zinc-800 flex flex-row p-4 gap-2">
+    <div class="bg-zinc-800 px-6 py-4">
+        <span class="text-lg font-semibold">
+            Description
+        </span>
+        <div>
+            {{ beatmapset.description }}
+        </div>
     </div>
+
 </div>
 
 
