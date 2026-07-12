@@ -21,7 +21,7 @@
         <script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
         {% endif %}
     </head>
-    <body class="bg-zinc-950">
+    <body class="bg-zinc-900">
         <div class="flex h-screen">
             {% block main_header %}{{ include('_layout/sidebar.twig') }}{% endblock %}
             
@@ -29,16 +29,17 @@
             <div class="flex flex-col grow">
             
                 {# "main" #}
-                <div class="flex flex-col overflow-y-hidden my-4 mr-4 grow border-lg shadow-lg rounded-2xl">
+                <div class="flex flex-col overflow-y-hidden my-4 mr-4 grow border-lg rounded-2xl basic-border">
 
                     {# meta #}
-                    <div class="">
+                    <div class="flex p-4 bg-zinc-800 basic-border-b">
+                        <h1 class="text-lg">beatmap info</h1>
                     </div>
 
                     {# actual body content #}
-                    <div class="bg-zinc-900 grow">
+                    <div class="bg-zinc-850 grow">
                         {# body content width #}
-                        <div class="w-6xl m-auto">
+                        <div class="w-6xl m-auto mt-4">
                             {% block body %}{% endblock %}
                         </div>
                     </div>

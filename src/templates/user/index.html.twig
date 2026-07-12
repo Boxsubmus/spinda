@@ -5,11 +5,13 @@
 {% block body %}
 
 <div class="flex flex-col gap-4">
-<div class="bg-zinc-800 rounded-2xl overflow-hidden shadow">
-    <div class="h-64" style="background-image: url('https://assets.ppy.sh/user-profile-covers/11549458/bfc349c01b3c83000fd63f9d5cf0a0b683c5ccb1f22cdc3e6b223a23f9cf198f.png');">
+<div class="bg-zinc-800 rounded-2xl overflow-hidden shadow basic-border">
+    <div
+        class="h-64 bg-center bg-cover bg-[radial-gradient(circle_at_center,#1f2937,transparent_70%)]"
+        style="background-image: url('https://pbs.twimg.com/profile_banners/383832535/1488939982/1500x500');">
     </div>
 
-    <div class="flex flex-row gap-6 h-28">
+    <div class="flex flex-row gap-6 h-28 basic-border-t">
 
         <img class="rounded-2xl w-40 h-40 shadow-lg self-end mb-4 ml-8" src="{{ user.avatarUrl }}"/>
 
@@ -23,7 +25,7 @@
 
     </div>
 
-    <div class="bg-zinc-800 inset-shadow-xs inset-shadow-zinc-500">
+    <div class="bg-zinc-800 basic-border-t">
         <div class="p-4">
             Joined {{ user.createdAt|date('F j, Y') }}
             {{ user.mappingPoints }} mapping points
@@ -31,34 +33,50 @@
     </div>
 </div>
 
-<div class="bg-zinc-800 rounded-2xl overflow-hidden shadow p-8">
-    <h1 class="text-3xl">Maps</h1>
+<div class="bg-zinc-800 rounded-2xl overflow-hidden shadow p-6 basic-border">
+    <h1 class="text-2xl">Maps</h1>
 
-    <div class="p-4">
+    <div class="p-0 rounded-2xl mt-6">
         <div class="grid grid-cols-2 gap-3">
             {% for beatmap in beatmaps %}
-                <a >
-                    <div class="flex flex-row gap-4">
+                <div class="group relative block overflow-hidden rounded-xl basic-border">
+                    {# Blurred background cover #}
+                    <div class="absolute inset-0 bg-cover bg-center blur-sm scale-110"
+                        style="background-image: url('{{ beatmap.getCoverUrl(storage) }}');">
+                    </div>
+
+                    {# Overlay for readability #}
+                    <div class="absolute inset-0 bg-zinc-900/80"></div>
+
+                    {# Hover dimming overlay #}
+                    <div class="absolute inset-0 bg-black opacity-0 transition-opacity duration-200 group-hover:opacity-40"></div>
+
+                    <a href="{{ path('app_beatmapsets', {id: beatmap.id}) }}" class="absolute inset-0 z-10"></a>
+
+                    {# Content #}
+                    <div class="relative flex flex-row gap-4 p-2">
                         <img class="w-32 rounded-xl" src="{{ beatmap.getCoverUrl(storage) }}">
                         <div class="flex flex-col text-shadow-sm">
                             <span class="text-2xl font-semibold">{{ beatmap.title }}</span>
                             <span class="text-xl">{{ beatmap.artist }}</span>
-                            <span class="text-sm">
+                            <div class="text-sm">
                                 mapped by
-                                <span class="font-semibold">{{ beatmap.author.username }}</span>
-                            </span>
-                            
+                                <a href="{{  path('app_user', {id: app.user.id}) }}"
+                                    class="font-semibold pointer-events-auto relative z-30 hover:underline">
+                                    {{ beatmap.author.username }}
+                                </a>
+                            </div>
+
                             <div class="grow"></div>
 
                             <div class="flex">
-                                <span class="bg-pink-400 py-0 px-3 text-shadow-sm rounded-3xl text-center text-zinc-800 font-semibold">
-                                    LOVED
+                                <span class="bg-gray-400 py-0 px-3 text-shadow-none rounded-3xl text-center text-zinc-800 font-bold">
+                                    ARCHIVE
                                 </span>
                             </div>
                         </div>
                     </div>
-
-                </a>
+                </div>
             {% endfor %}
         </div>
     </div>

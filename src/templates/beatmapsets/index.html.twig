@@ -8,13 +8,13 @@
 
 {% block body %}
 
-<div class="flex flex-col rounded-2xl overflow-hidden shadow">
+<div class="flex flex-col rounded-2xl overflow-hidden shadow basic-border">
 
     {# header #}
     <div class="relative grid overflow-hidden w-full">
         
         {# banner cover #}
-        <div class="absolute inset-0 bg-cover bg-center"
+        <div class="absolute inset-0 bg-cover bg-center bg-[radial-gradient(circle_at_center,#1f2937,transparent_70%)]"
             {# style="background-image: url('{{ beatmapset.getBannerUrl(storage) }}');" #}
             >
         </div>
@@ -39,7 +39,7 @@
                     <div class="flex flex-col justify-center">
                         <div>
                             mapped by
-                            <a class="font-semibold" href="{{  path('app_user', {id: beatmapset.author.id}) }}">{{ beatmapset.author.username }}</a>
+                            <a class="font-semibold hover:underline" href="{{  path('app_user', {id: beatmapset.author.id}) }}">{{ beatmapset.author.username }}</a>
                         </div>
                         <p>submitted {{ beatmapset.createdAt|date('F j, Y') }}</p>
                     </div>
@@ -51,7 +51,7 @@
 
                 {# status #}
                 <div class="flex mx-auto mr-0">
-                    <span class="bg-gray-500 py-2 px-10 text-shadow-sm rounded-3xl text-center font-semibold">
+                    <span class="bg-gray-500 py-2 px-10 text-shadow-sm rounded-3xl text-center font-bold basic-border">
                         ARCHIVE
                     </span>
                 </div>
@@ -59,17 +59,17 @@
                 {# box #}
                 <div class="grid grid-cols-2 gap-1">
                     
-                    <span class="bg-zinc-800 px-4 p-2 rounded">
+                    <span class="bg-zinc-800 px-4 p-2 rounded basic-border">
                         <i class="fa-solid fa-download"></i>
                         {{ beatmapset.downloads }}
                     </span>
 
-                    <span class="bg-zinc-800 px-4 p-2 rounded">
+                    <span class="bg-zinc-800 px-4 p-2 rounded basic-border">
                         <i class="fa-solid fa-heart"></i>
                         {{ beatmapset.favorites }}
                     </span>
 
-                    <div class="col-span-2 bg-zinc-800 p-4 w-80 rounded">
+                    <div class="col-span-2 bg-zinc-800 p-4 w-80 rounded basic-border">
 
                         <div class="w-full max-w-sm mx-auto">
                             <div class="flex items-center justify-between mb-2">
@@ -96,7 +96,7 @@
         </div>
 
         {# Buttons #}
-        <div class="z-10 flex flex-row p-4 gap-2" style="background-color: hsla(0, 0%, 0%, 0.3);">
+        <div class="z-10 flex flex-row p-4 gap-2 basic-border-t" style="background-color: hsla(0, 0%, 0%, 0.3);">
             <twig:ActionButton
                 url="{{  path('app_beatmapsets_download', {id: beatmapset.id}) }}"
                 label="Download"
@@ -116,7 +116,7 @@
         </div>
     </div>
 
-    <div class="bg-zinc-800 px-6 py-4">
+    <div class="bg-zinc-800 px-6 py-4 basic-border-t">
         <span class="text-lg font-semibold">
             Description
         </span>

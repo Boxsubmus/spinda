@@ -5,8 +5,21 @@
 
 @theme {
   --font-sans: "Torus", ui-sans-serif, system-ui, sans-serif;
+  --color-zinc-850: #1d1d21;
 }
 
 :root {
   color-scheme: dark;
+}
+
+.basic-border {
+  @apply border border-white/10;
+}
+
+.basic-border-t {
+  @apply border-t border-white/10;
+}
+
+.basic-border-b {
+  @apply border-b border-white/10;
 }
