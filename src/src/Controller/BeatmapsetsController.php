@@ -27,4 +27,10 @@ final class BeatmapsetsController extends AbstractController
             'beatmapset' => $beatmapset
         ]);
     }
+
+    #[Route('/beatmapsets/{id}/download', name: 'app_beatmapsets_download')]
+    public function download($id, BeatmapsetRepository $repository): Response
+    {
+        return new Response('what');
+    }
 }

@@ -4,16 +4,18 @@
 
 {% block body %}
 
-
+<div class="flex flex-col shadow">
     {# header #}
-    <div class="relative grid rounded-lg overflow-hidden w-full">
+    <div class="relative grid overflow-hidden w-full">
+        
         {# banner cover #}
         <div class="absolute inset-0 bg-cover bg-center"
-            style="background-image: url('{{ beatmapset.getBannerUrl(storage) }}');">
+            {#style="background-image: url('{{ beatmapset.getBannerUrl(storage) }}');"#}
+            >
         </div>
 
         {# dark overlay so text stays readable #}
-        <div class="absolute inset-0" style="background-color: hsla(0, 0%, 0%, 0.6);"></div>
+        <div class="absolute inset-0" style="background-color: hsla(0, 0%, 0%, 0.2);"></div>
 
         {# Content #}
         <div class="relative z-10 flex flex-row gap-4 p-4">
@@ -39,21 +41,26 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    {# Buttons #}
-    <div class="flex flex-wrap bg-gray-800">
-        <div class="m-4">
-            <a class="flex items-center justify-between height-4" href="beatmapsets/{{ beatmapset.id }}/download">
-                {# content #}
-                <span class="flex flex-col justify-center">
-                    Download
-                </span>
-                {# icon #}
-                <span>
-                    <i class="fa-solid fa-download"></i>
-                </span>
-            </a>
+        <div class="z-10 flex flex-row p-4 gap-2" style="background-color: hsla(0, 0%, 0%, 0.2);">
+            {# Buttons #}
+            <twig:ActionButton
+                url="{{  path('app_beatmapsets_download', {id: beatmapset.id}) }}"
+                label="Download"
+                icon="fa-download"
+            />
+
+            <twig:ActionButton
+                url=""
+                label="Feature"
+                icon="fa-award"
+            />
         </div>
     </div>
+
+    <div class="bg-zinc-800 flex flex-row p-4 gap-2">
+    </div>
+</div>
+
+
 {% endblock %}

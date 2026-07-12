@@ -5,6 +5,8 @@ namespace App;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+final class Helpers
+{
 /// Warning: This calls an external api every time! Using sparingly!
 function get_country_from_ip(string $ip): string
 {
@@ -295,4 +297,5 @@ function country_name_from_acronym(string $acronym): string
     ];
 
     return $countries[$acronym];
+}
 }

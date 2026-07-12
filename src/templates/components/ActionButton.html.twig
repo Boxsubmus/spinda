@@ -1,0 +1,17 @@
+<a class="flex items-center justify-between height-4 cursor-pointer
+    bg-yellow-600 transition hover:bg-yellow-400
+    p-3 rounded shadow min-w-32 gap-3 h-12
+    text-shadow-sm
+    "
+    href="{{ url }}">
+
+    {# content #}
+    <span class="flex flex-col justify-center ml-2 font-semibold">
+        {{ label }}
+    </span>
+
+    {# icon #}
+    <span class="text-xl mr-1.5">
+        <i class="fa-solid {{ icon }}"></i>
+    </span>
+</a>
