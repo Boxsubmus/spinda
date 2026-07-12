@@ -1,5 +1,5 @@
 
-<div class="group relative block overflow-hidden rounded-2xl basic-border">
+<div class="group relative block overflow-hidden rounded-2xl basic-outline">
     {# Blurred background cover #}
     <div class="absolute inset-0 bg-cover bg-center blur-sm scale-110"
         style="background-image: url('{{ beatmapset.getCoverUrl(storage) }}');">
@@ -29,8 +29,10 @@
             </div>
             <div class="grow"></div>
             <div class="flex">
-                <span class="bg-gray-400 py-0 px-3 text-shadow-none rounded-3xl text-center text-zinc-800 font-bold">
-                    ARCHIVE
+                <span class="bg-gray-400 py-0 px-3 text-shadow-none rounded-3xl text-center text-zinc-800 font-bold inline-flex items-center justify-center">
+                    <span class="pb-0.75">
+                        ARCHIVE
+                    </span>
                 </span>
             </div>
         </div>
