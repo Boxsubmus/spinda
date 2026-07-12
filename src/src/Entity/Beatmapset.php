@@ -52,6 +52,9 @@ class Beatmapset
     #[ORM\Column]
     private ?int $downloads = null;
 
+    #[ORM\Column(type: Types::BIGINT)]
+    private ?string $filesize = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -227,6 +230,18 @@ class Beatmapset
     public function setDownloads(int $downloads): static
     {
         $this->downloads = $downloads;
+
+        return $this;
+    }
+
+    public function getFilesize(): ?string
+    {
+        return $this->filesize;
+    }
+
+    public function setFilesize(string $filesize): static
+    {
+        $this->filesize = $filesize;
 
         return $this;
     }
