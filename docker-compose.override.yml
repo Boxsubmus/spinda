@@ -32,3 +32,15 @@ services:
       - "8081:80"
     depends_on:
       - database
+
+  scheduler:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile.dev
+    command: php bin/console messenger:consume scheduler_default -vv
+    depends_on:
+      - app
+      - database
+    restart: unless-stopped
+    volumes:
+      - ./src:/var/www/html

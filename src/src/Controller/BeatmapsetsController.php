@@ -10,8 +10,11 @@ use App\Repository\BeatmapsetRepository;
 use App\Service\CommentVoteService;
 use App\Service\StorageService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class BeatmapsetsController extends AbstractController
 {
@@ -45,11 +48,13 @@ final class BeatmapsetsController extends AbstractController
     // Comment stuff
     // --------------------------------
 
-    #[Route('/maps/comments/{id}/vote/{type}', name: 'app_comment_vote', methods: ['POST'])]
+    #[Route('/api/maps/comments/{id}/vote/{type}', name: 'app_comment_vote', methods: ['POST'])]
     public function vote(
         BeatmapsetComment $comment,
         string $type,
+        Request $request,
         CommentVoteService $voteService,
+        CsrfTokenManagerInterface $csrfTokenManager,
     ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
@@ -65,6 +70,19 @@ final class BeatmapsetsController extends AbstractController
             'state' => $newState,
             'likes' => $comment->getLikes(),
             'dislikes' => $comment->getDislikes(),
+        ]);
+    }
+
+    #[Route('/api/debug-headers', name: 'debug_headers')]
+    public function debugHeaders(Request $request): \Symfony\Component\HttpFoundation\JsonResponse
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        return $this->json([
+            'authorization_header' => $request->headers->get('Authorization'),
+            'all_headers' => $request->headers->all(),
+            'server_auth' => $_SERVER['HTTP_AUTHORIZATION'] ?? 'NOT SET',
+            'server_redirect_auth' => $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? 'NOT SET',
         ]);
     }
 }

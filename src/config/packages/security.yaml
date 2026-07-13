@@ -13,11 +13,17 @@ security:
         # used to reload user from session & other features (e.g. switch_user)
 
     firewalls:
+        api:
+            pattern: ^/api/
+            stateless: true
+            custom_authenticators:
+                - App\Security\ApiTokenAuthenticator
         dev:
             # Ensure dev tools and static assets are always allowed
             pattern: ^/(_profiler|_wdt|assets|build)/
             security: false
         main:
+            pattern : ^/
             lazy: true
             provider: app_user_provider
             custom_authenticators:
