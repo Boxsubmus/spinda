@@ -18,9 +18,7 @@ final class UserController extends AbstractController
     #[Route('/users/{id}', name: 'app_user')]
     public function index($id, UserRepository $repository, BeatmapsetRepository $beatmapsRe): Response
     {
-        $user = $repository->findOneBy([
-            'id' => $id
-        ]);
+        $user = $repository->find($id);
         
         $beatmaps = $beatmapsRe->findBy([
             'author' => $id

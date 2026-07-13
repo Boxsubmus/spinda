@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\BeatmapsetCommentRepository;
 use App\Repository\BeatmapsetRepository;
 use App\Service\StorageService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,16 +16,16 @@ final class BeatmapsetsController extends AbstractController
     ) {}
 
     #[Route('/beatmapsets/{id}', name: 'app_beatmapsets')]
-    public function index($id, BeatmapsetRepository $repository): Response
+    public function index($id, BeatmapsetRepository $repository, BeatmapsetCommentRepository $commentRepository): Response
     {
-        $beatmapset = $repository->findOneBy([
-            'id' => $id
-        ]);
+        $beatmapset = $repository->find($id);
+        $comments = $commentRepository->findByBeatmapset($beatmapset);
 
         return $this->render('beatmapsets/index.html.twig', [
             'storage' => $this->storage,
             'controller_name' => 'BeatmapsetsController',
-            'beatmapset' => $beatmapset
+            'beatmapset' => $beatmapset,
+            'comments' => $comments
         ]);
     }
 

@@ -8,6 +8,7 @@
 
 {% block body %}
 
+<div class="flex flex-col gap-4">
 <div class="flex flex-col rounded-2xl overflow-hidden shadow basic-border">
 
     {# header #}
@@ -122,11 +123,45 @@
             Description
         </span>
         <div class="markdown-render">
-            {{ beatmapset.description|markdown_to_html }}
+            {% if beatmapset.description is not null %}
+                {{ beatmapset.description|markdown_to_html }}
+            {% endif %}
         </div>
     </div>
-
 </div>
 
+<div class="bg-zinc-800 rounded-2xl overflow-hidden shadow py-6 basic-border">
+    <h1 class="px-6 pb-6 text-2xl">comments</h1>
+
+    {% for comment in comments %}
+        <div class="basic-border-t basic-border-b p-6">
+            <div class="flex gap-3">
+                <a class="w-12 h-12 flex-none">
+                    <span class="inline-block w-full h-0 rounded-full bg-contain" style="padding-bottom: 100%; background-image: url('{{ comment.author.avatarUrl }}')"></span>
+                </a>
+                <div class="flex flex-1 flex-col">
+                    <div class="flex">
+                        <a class="font-semibold text-xl hover:underline block -mt-2 -mb-1" href="{{ path('app_user', {id: comment.author.id}) }}">
+                            {{ comment.author.username }}
+                        </a>
+                        <div class="ml-auto -mt-1.5 text-white/40">
+                            <span>{{ comment.createdAt|date('F j, Y') }}</span>
+                        </div>
+                    </div>
+
+                    <div style="font-family: Inter;">
+                        {{ comment.content }}
+                    </div>
+
+                    <div class="flex items-baseline flex-wrap gap-2">
+                        <div class="font-semibold">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+</div>
 
 {% endblock %}

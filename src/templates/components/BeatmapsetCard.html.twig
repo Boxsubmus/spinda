@@ -22,7 +22,7 @@
             <span class="text-xl">{{ beatmapset.artist }}</span>
             <div class="text-sm">
                 mapped by
-                <a href="{{  path('app_user', {id: app.user.id}) }}"
+                <a href="{{  path('app_user', {id: beatmapset.author.id}) }}"
                     class="font-semibold pointer-events-auto relative z-30 hover:underline">
                     {{ beatmapset.author.username }}
                 </a>

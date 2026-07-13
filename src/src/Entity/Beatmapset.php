@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\BeatmapsetRepository;
 use App\Service\StorageService;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -54,6 +56,17 @@ class Beatmapset
 
     #[ORM\Column(type: Types::BIGINT)]
     private ?string $filesize = null;
+
+    /**
+     * @var Collection<int, BeatmapsetComment>
+     */
+    #[ORM\OneToMany(targetEntity: BeatmapsetComment::class, mappedBy: 'beatmapset', orphanRemoval: true)]
+    private Collection $beatmapsetComments;
+
+    public function __construct()
+    {
+        $this->beatmapsetComments = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -242,6 +255,36 @@ class Beatmapset
     public function setFilesize(string $filesize): static
     {
         $this->filesize = $filesize;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, BeatmapsetComment>
+     */
+    public function getBeatmapsetComments(): Collection
+    {
+        return $this->beatmapsetComments;
+    }
+
+    public function addBeatmapsetComment(BeatmapsetComment $beatmapsetComment): static
+    {
+        if (!$this->beatmapsetComments->contains($beatmapsetComment)) {
+            $this->beatmapsetComments->add($beatmapsetComment);
+            $beatmapsetComment->setBeatmapset($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBeatmapsetComment(BeatmapsetComment $beatmapsetComment): static
+    {
+        if ($this->beatmapsetComments->removeElement($beatmapsetComment)) {
+            // set the owning side to null (unless already changed)
+            if ($beatmapsetComment->getBeatmapset() === $this) {
+                $beatmapsetComment->setBeatmapset(null);
+            }
+        }
 
         return $this;
     }

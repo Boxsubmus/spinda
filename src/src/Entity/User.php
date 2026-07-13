@@ -52,9 +52,16 @@ class User implements UserInterface
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $aboutMe = null;
 
+    /**
+     * @var Collection<int, BeatmapsetComment>
+     */
+    #[ORM\OneToMany(targetEntity: BeatmapsetComment::class, mappedBy: 'author', orphanRemoval: true)]
+    private Collection $beatmapsetComments;
+
     public function __construct()
     {
         $this->beatmapsets = new ArrayCollection();
+        $this->beatmapsetComments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -220,6 +227,36 @@ class User implements UserInterface
     public function setAboutMe(?string $aboutMe): static
     {
         $this->aboutMe = $aboutMe;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, BeatmapsetComment>
+     */
+    public function getBeatmapsetComments(): Collection
+    {
+        return $this->beatmapsetComments;
+    }
+
+    public function addBeatmapsetComment(BeatmapsetComment $beatmapsetComment): static
+    {
+        if (!$this->beatmapsetComments->contains($beatmapsetComment)) {
+            $this->beatmapsetComments->add($beatmapsetComment);
+            $beatmapsetComment->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBeatmapsetComment(BeatmapsetComment $beatmapsetComment): static
+    {
+        if ($this->beatmapsetComments->removeElement($beatmapsetComment)) {
+            // set the owning side to null (unless already changed)
+            if ($beatmapsetComment->getAuthor() === $this) {
+                $beatmapsetComment->setAuthor(null);
+            }
+        }
 
         return $this;
     }
