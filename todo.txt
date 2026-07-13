@@ -1,0 +1,9 @@
+* User profile beatmap listing may be using a ton of queries
+* add comment likes and dislikes (and enforce one like per user)
+* Add ability to leave comments at all
+* Add 404 pages when going to beatmaps which don't exist
+* Add download beatmaps (and enforcing a rate limit)
+* Add user roles
+* Add featuring beatmaps
+* Finish sidebar
+* Add signing in through the game client
