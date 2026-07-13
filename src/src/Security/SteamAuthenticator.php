@@ -94,10 +94,13 @@ class SteamAuthenticator extends AbstractAuthenticator
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         $user = $token->getUser();
-        $apiToken = $this->apiTokenService->issue($user, 'web', new \DateInterval('P30D'));
+        $issueToken = $this->apiTokenService->issue($user, 'web', new \DateInterval('P30D'));
+
+        $rawToken = $issueToken[0];
+        $apiToken = $issueToken[1]->getToken();
 
         // stash it somewhere your Twig layout can read on the next page load
-        $request->getSession()->set('current_api_token', $apiToken->getToken());
+        $request->getSession()->set('current_api_token', $rawToken);
 
         return new RedirectResponse($this->urlGenerator->generate('app_home'));
     }

@@ -12,22 +12,26 @@ class ApiTokenService
     {
     }
 
-    public function issue(User $user, string $source, ?\DateInterval $ttl = null): ApiToken
+    // 0: raw token, 1: api token
+    public function issue(User $user, string $source, ?\DateInterval $ttl = null): array
     {
-        $token = new ApiToken();
-        $token->setUser($user);
-        $token->setSource($source);
-        $token->setToken(bin2hex(random_bytes(32))); // 64-char random token
-        $token->setCreatedAt(new \DateTimeImmutable());
+        $rawToken = bin2hex(random_bytes(32));
+
+        $apiToken = new ApiToken();
+        $apiToken->setUser($user);
+        $apiToken->setSource($source);
+        $apiToken->setToken(hash('sha256', $rawToken)); // store the hash
+        $apiToken->setCreatedAt(new \DateTimeImmutable());
 
         if ($ttl) {
-            $token->setExpiresAt((new \DateTimeImmutable())->add($ttl));
+            $apiToken->setExpiresAt((new \DateTimeImmutable())->add($ttl));
         }
 
-        $this->em->persist($token);
+        $this->em->persist($apiToken);
         $this->em->flush();
 
-        return $token;
+        // Return the RAW token to give to the client — this is the only time it ever exists in plaintext
+        return [$rawToken, $apiToken]; // note: change return type; caller needs both entity and raw value if useful
     }
 
     public function revoke(ApiToken $token): void

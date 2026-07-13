@@ -1,15 +1,28 @@
 import { Controller } from '@hotwired/stimulus';
 
-function apiFetch(url, options = {}) {
-    const token = document.querySelector('meta[name="api-token"]').content;
+async function apiFetch(url, options = {}) {
+    let token = document.querySelector('meta[name="api-token"]').content;
 
-    return fetch(url, {
+    let response = await fetch(url, {
         ...options,
-        headers: {
-            ...options.headers,
-            'Authorization': `Bearer ${token}`,
-        },
+        headers: { ...options.headers, 'Authorization': `Bearer ${token}` },
     });
+
+    if (response.status === 401) {
+        // session might still be valid — try to mint a fresh token
+        const refreshResponse = await fetch('/auth/api-token');
+        if (refreshResponse.ok) {
+            const data = await refreshResponse.json();
+            document.querySelector('meta[name="api-token"]').content = data.token;
+
+            response = await fetch(url, {
+                ...options,
+                headers: { ...options.headers, 'Authorization': `Bearer ${data.token}` },
+            });
+        }
+    }
+
+    return response;
 }
 
 export default class extends Controller {

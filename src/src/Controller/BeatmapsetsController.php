@@ -54,7 +54,6 @@ final class BeatmapsetsController extends AbstractController
         string $type,
         Request $request,
         CommentVoteService $voteService,
-        CsrfTokenManagerInterface $csrfTokenManager,
     ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 

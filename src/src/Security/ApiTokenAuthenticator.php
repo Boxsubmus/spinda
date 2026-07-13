@@ -28,8 +28,9 @@ class ApiTokenAuthenticator extends AbstractAuthenticator
     public function authenticate(Request $request): Passport
     {
         $rawToken = substr($request->headers->get('Authorization'), 7); // strip "Bearer "
+        $hashedToken = hash('sha256', $rawToken);
 
-        $apiToken = $this->apiTokenRepository->findOneBy(['token' => $rawToken]);
+        $apiToken = $this->apiTokenRepository->findOneBy(['token' => $hashedToken]);
 
         if (!$apiToken) {
             throw new CustomUserMessageAuthenticationException('Invalid API token.');
