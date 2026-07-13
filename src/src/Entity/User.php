@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -47,6 +48,9 @@ class User implements UserInterface
 
     #[ORM\Column(length: 2)]
     private ?string $countryAcronym = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $aboutMe = null;
 
     public function __construct()
     {
@@ -206,5 +210,17 @@ class User implements UserInterface
     public function getCountryFlagUrl(): ?string
     {
         return \App\Helpers::flag_url($this->countryAcronym);
+    }
+
+    public function getAboutMe(): ?string
+    {
+        return $this->aboutMe;
+    }
+
+    public function setAboutMe(?string $aboutMe): static
+    {
+        $this->aboutMe = $aboutMe;
+
+        return $this;
     }
 }

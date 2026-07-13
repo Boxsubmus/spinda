@@ -28,21 +28,26 @@
 
 <div class="flex flex-row gap-4">
 
-    <div class="bg-zinc-800 rounded-2xl overflow-hidden shadow p-6 basic-border">
-        <h1 class="text-2xl">stats</h1>
-        <div class="p-2">
-            Joined {{ user.createdAt|date('F j, Y') }}
-            <br>
-            {{ user.mappingPoints }} mapping points
+    <div class="flex flex-col">
+        <div class="bg-zinc-800 rounded-2xl overflow-hidden shadow p-6 basic-border">
+            <h1 class="text-2xl">stats</h1>
+            <div class="p-2">
+                Joined {{ user.createdAt|date('F j, Y') }}
+                <br>
+                {{ user.mappingPoints }} mapping points
+            </div>
         </div>
+        <div class="flex grow"></div>
     </div>
+
 
     <div class="flex flex-col grow gap-4">
         <div class="bg-zinc-800 rounded-2xl overflow-hidden shadow p-6 basic-border">
             <h1 class="text-2xl">about me!</h1>
-            <div class="markdown">
-                sexiest man alive
-            </div>
+                <div class="markdown-render">
+                    {{ user.aboutMe|markdown_to_html }}
+                </div>
+
         </div>
 
         <div class="bg-zinc-800 rounded-2xl overflow-hidden shadow p-6 basic-border">

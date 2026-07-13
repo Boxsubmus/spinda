@@ -121,8 +121,8 @@
         <span class="text-lg font-semibold">
             Description
         </span>
-        <div>
-            {{ beatmapset.description }}
+        <div class="markdown-render">
+            {{ beatmapset.description|markdown_to_html }}
         </div>
     </div>
 
