@@ -7,6 +7,8 @@
 {% block title %}Hyperspin - {{ beatmapset.title }}{% endblock %}
 
 {% block body %}
+        {# something post protection #}
+        <body data-csrf-token="{{ csrf_token('vote') }}">
 
 <div class="flex flex-col gap-4">
 <div class="flex flex-col rounded-2xl overflow-hidden shadow basic-border">
@@ -137,7 +139,7 @@
         <div class="basic-border-t basic-border-b p-6">
             <div class="flex gap-3">
                 <a class="w-12 h-12 flex-none">
-                    <span class="inline-block w-full h-0 rounded-full bg-contain" style="padding-bottom: 100%; background-image: url('{{ comment.author.avatarUrl }}')"></span>
+                    <span class="inline-block w-full h-0 rounded bg-contain" style="padding-bottom: 100%; background-image: url('{{ comment.author.avatarUrl }}')"></span>
                 </a>
                 <div class="flex flex-1 flex-col">
                     <div class="flex">
@@ -157,6 +159,27 @@
                         <div class="font-semibold">
                         </div>
                     </div>
+
+                    <div class="flex gap-2" data-comment-votes data-comment-id="{{ comment.id }}">
+                            <button
+                                type="button"
+                                class="cursor-pointer flex items-center gap-1 vote-btn {{ userVotes[comment.id] is defined and userVotes[comment.id] == 1 ? 'text-green-300' }}"
+                                data-vote-type="like"
+                            >
+                                <i class="fas fa-thumbs-up"></i>
+                                <span data-like-count>{{ comment.likes }}</span>
+                            </button>
+
+                            <button
+                                type="button"
+                                class="cursor-pointer flex items-center gap-1 vote-btn {{ userVotes[comment.id] is defined and userVotes[comment.id] == -1 ? 'text-red-400' }}"
+                                data-vote-type="dislike"
+                            >
+                                <i class="fas fa-thumbs-down"></i>
+                                <span data-dislike-count>{{ comment.dislikes }}</span>
+                            </button>
+                    </div>
+
                 </div>
             </div>
         </div>

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\BeatmapsetCommentRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BeatmapsetCommentRepository::class)]
@@ -35,6 +37,17 @@ class BeatmapsetComment
     #[ORM\ManyToOne(inversedBy: 'beatmapsetComments')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Beatmapset $beatmapset = null;
+
+    /**
+     * @var Collection<int, BeatmapsetCommentVote>
+     */
+    #[ORM\OneToMany(targetEntity: BeatmapsetCommentVote::class, mappedBy: 'comment', orphanRemoval: true)]
+    private Collection $votes;
+
+    public function __construct()
+    {
+        $this->votes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -121,6 +134,36 @@ class BeatmapsetComment
     public function setBeatmapset(?Beatmapset $beatmapset): static
     {
         $this->beatmapset = $beatmapset;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, BeatmapsetCommentVote>
+     */
+    public function getVotes(): Collection
+    {
+        return $this->votes;
+    }
+
+    public function addVote(BeatmapsetCommentVote $vote): static
+    {
+        if (!$this->votes->contains($vote)) {
+            $this->votes->add($vote);
+            $vote->setComment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVote(BeatmapsetCommentVote $vote): static
+    {
+        if ($this->votes->removeElement($vote)) {
+            // set the owning side to null (unless already changed)
+            if ($vote->getComment() === $this) {
+                $vote->setComment(null);
+            }
+        }
 
         return $this;
     }
