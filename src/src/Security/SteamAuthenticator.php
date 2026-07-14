@@ -4,7 +4,6 @@ namespace App\Security;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use App\Service\ApiTokenService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +23,6 @@ class SteamAuthenticator extends AbstractAuthenticator
         private UserRepository $userRepository,
         private EntityManagerInterface $em,
         private UrlGeneratorInterface $urlGenerator,
-        private ApiTokenService $apiTokenService,
     ) {
     }
 
@@ -93,15 +91,6 @@ class SteamAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        $user = $token->getUser();
-        $issueToken = $this->apiTokenService->issue($user, 'web', new \DateInterval('P30D'));
-
-        $rawToken = $issueToken[0];
-        $apiToken = $issueToken[1]->getToken();
-
-        // stash it somewhere your Twig layout can read on the next page load
-        $request->getSession()->set('current_api_token', $rawToken);
-
         return new RedirectResponse($this->urlGenerator->generate('app_home'));
     }
 

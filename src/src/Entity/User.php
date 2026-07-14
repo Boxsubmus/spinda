@@ -58,17 +58,10 @@ class User implements UserInterface
     #[ORM\OneToMany(targetEntity: BeatmapsetComment::class, mappedBy: 'author', orphanRemoval: true)]
     private Collection $beatmapsetComments;
 
-    /**
-     * @var Collection<int, ApiToken>
-     */
-    #[ORM\OneToMany(targetEntity: ApiToken::class, mappedBy: 'user', orphanRemoval: true)]
-    private Collection $apiTokens;
-
     public function __construct()
     {
         $this->beatmapsets = new ArrayCollection();
         $this->beatmapsetComments = new ArrayCollection();
-        $this->apiTokens = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -262,36 +255,6 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($beatmapsetComment->getAuthor() === $this) {
                 $beatmapsetComment->setAuthor(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ApiToken>
-     */
-    public function getApiTokens(): Collection
-    {
-        return $this->apiTokens;
-    }
-
-    public function addApiToken(ApiToken $apiToken): static
-    {
-        if (!$this->apiTokens->contains($apiToken)) {
-            $this->apiTokens->add($apiToken);
-            $apiToken->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeApiToken(ApiToken $apiToken): static
-    {
-        if ($this->apiTokens->removeElement($apiToken)) {
-            // set the owning side to null (unless already changed)
-            if ($apiToken->getUser() === $this) {
-                $apiToken->setUser(null);
             }
         }
 

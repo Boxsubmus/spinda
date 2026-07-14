@@ -20,7 +20,7 @@ class Schedule implements ScheduleProviderInterface
     {
         return (new SymfonySchedule())
             ->add(
-                RecurringMessage::every('1 minute', new \App\Message\PruneApiTokensMessage())
+                RecurringMessage::every('1 day', new \App\Scheduler\Message\PruneSessionsMessage())
             )
             ->stateful($this->cache) // ensure missed tasks are executed
             ->processOnlyLastMissedRun(true) // ensure only last missed task is run

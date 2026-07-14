@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Service\ApiTokenService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,15 +35,10 @@ class SteamAuthController extends AbstractController
         throw $this->createAccessDeniedException();
     }
 
-    #[Route('/auth/api-token', name: 'auth_api_token_refresh', methods: ['GET'])]
-    public function refreshApiToken(ApiTokenService $apiTokenService): \Symfony\Component\HttpFoundation\JsonResponse
+    #[Route('/api/auth/steam-client', name: 'api_auth_steam_client', methods: ['POST'])]
+    public function steamClientAuth(): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
-        $response = $apiTokenService->issue($this->getUser(), 'web', new \DateInterval('P30D'));
-        $rawToken = $response[0];
-        $apiToken = $response[1];
-
-        return $this->json(['token' => $rawToken]);
+        // Intercepted by SteamTicketAuthenticator before this ever runs
+        throw $this->createAccessDeniedException();
     }
 }

@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class BeatmapsetsController extends AbstractController
@@ -54,8 +55,14 @@ final class BeatmapsetsController extends AbstractController
         string $type,
         Request $request,
         CommentVoteService $voteService,
+        CsrfTokenManagerInterface $csrfTokenManager,
     ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $token = $request->headers->get('X-CSRF-Token');
+        if (!$csrfTokenManager->isTokenValid(new CsrfToken('auth', $token))) {
+            throw $this->createAccessDeniedException('Invalid CSRF token');
+        }
 
         $voteType = match ($type) {
             'like' => BeatmapsetCommentVote::TYPE_LIKE,

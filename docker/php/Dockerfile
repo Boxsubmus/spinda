@@ -14,4 +14,6 @@ COPY --from=vendor /app/vendor ./vendor
 RUN composer dump-autoload --optimize --no-dev \
     && php bin/console cache:warmup --env=prod
 
+COPY conf.d/session.ini /usr/local/etc/php/conf.d/session.ini
+
 CMD ["php-fpm"]
