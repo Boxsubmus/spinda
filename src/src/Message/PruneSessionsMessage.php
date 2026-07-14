@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Scheduler\Message;
+namespace App\Message;
 
 class PruneSessionsMessage
 {

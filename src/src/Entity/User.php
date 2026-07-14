@@ -58,10 +58,17 @@ class User implements UserInterface
     #[ORM\OneToMany(targetEntity: BeatmapsetComment::class, mappedBy: 'author', orphanRemoval: true)]
     private Collection $beatmapsetComments;
 
+    /**
+     * @var Collection<int, UserSession>
+     */
+    #[ORM\OneToMany(targetEntity: UserSession::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $userSessions;
+
     public function __construct()
     {
         $this->beatmapsets = new ArrayCollection();
         $this->beatmapsetComments = new ArrayCollection();
+        $this->userSessions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -255,6 +262,36 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($beatmapsetComment->getAuthor() === $this) {
                 $beatmapsetComment->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserSession>
+     */
+    public function getUserSessions(): Collection
+    {
+        return $this->userSessions;
+    }
+
+    public function addUserSession(UserSession $userSession): static
+    {
+        if (!$this->userSessions->contains($userSession)) {
+            $this->userSessions->add($userSession);
+            $userSession->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserSession(UserSession $userSession): static
+    {
+        if ($this->userSessions->removeElement($userSession)) {
+            // set the owning side to null (unless already changed)
+            if ($userSession->getUser() === $this) {
+                $userSession->setUser(null);
             }
         }
 
