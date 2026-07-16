@@ -17,6 +17,8 @@ for (const path in controllers) {
 
 import { createApp, h } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
+import axios from "axios";
+import { router } from "@inertiajs/vue3";
 
 createInertiaApp({
   resolve: (name) => {
@@ -28,4 +30,11 @@ createInertiaApp({
       .use(plugin)
       .mount(el)
   },
+})
+
+router.on('navigate', (event) => {
+  const token = event.detail.page.props.csrfToken
+  if (token) {
+    axios.defaults.headers.common['X-CSRF-TOKEN'] = token
+  }
 })

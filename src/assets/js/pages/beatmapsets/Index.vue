@@ -1,6 +1,8 @@
 <script setup>
 import AppLayout from '../layouts/AppLayout.vue';
 import Markdown from '../components/Markdown.vue';
+import CommentVote from './CommentVote.vue';
+import ActionButton from '../components/ActionButton.vue';
 
 defineOptions({
     layout: [AppLayout, { title: 'beatmap info' }]
@@ -98,6 +100,25 @@ const props = defineProps({
                     </div>
                 </div>
 
+                <!-- buttons -->
+                <div class="z-10 flex flex-row p-4 gap-2 basic-border-t" style="background-color: hsla(0, 0%, 0%, 0.3);">
+                    <ActionButton
+                        label="Download"
+                        icon="fa-download"
+                    />
+
+                    <ActionButton
+                        label="Award"
+                        icon="fa-award"
+                    />
+
+                    <div class="grow"></div>
+
+                    <ActionButton
+                        icon="fa-heart"
+                    />
+                </div>
+
             </div>
 
             <div class="bg-zinc-800 px-6 py-4 basic-border-t">
@@ -135,17 +156,13 @@ const props = defineProps({
                         <div class="font-semibold">
                         </div>
                     </div>
-
-<div class="flex gap-2" data-controller="vote" data-vote-comment-id-value="{{ comment.id }}">
-    <button data-vote-target="likeBtn" data-action="click->vote#vote" data-vote-type="like" class="cursor-pointer flex items-center gap-1 }}">
-        <i class="fas fa-thumbs-up"></i>
-        <span data-vote-target="likeCount">{{ comment.likes }}</span>
-    </button>
-    <button data-vote-target="dislikeBtn" data-action="click->vote#vote" data-vote-type="dislike" class="cursor-pointer flex items-center gap-1}}">
-        <i class="fas fa-thumbs-down"></i>
-        <span data-vote-target="dislikeCount">{{ comment.dislikes }}</span>
-    </button>
-</div>
+                    
+                        <CommentVote
+                        :comment-id="comment.id"
+                        :initial-likes="comment.likes"
+                        :initial-dislikes="comment.dislikes"
+                        :initial-user-vote="comment.userVote"
+                        />
 
                 </div>
             </div>

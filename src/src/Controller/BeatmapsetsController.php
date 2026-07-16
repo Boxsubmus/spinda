@@ -103,9 +103,9 @@ final class BeatmapsetsController extends AbstractController
     ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        $token = $request->headers->get('X-CSRF-Token');
-        if (!$csrfTokenManager->isTokenValid(new CsrfToken('auth', $token))) {
-            throw $this->createAccessDeniedException('Invalid CSRF token');
+        $token = $request->headers->get('X-CSRF-TOKEN');
+        if (!$csrfTokenManager->isTokenValid(new CsrfToken('inertia', $token))) {
+            return new \Symfony\Component\HttpFoundation\JsonResponse(['error' => 'Invalid CSRF token'], 403);
         }
 
         $voteType = match ($type) {
