@@ -34,6 +34,9 @@ const user = computed(() => page.props.auth.user)
                     <div>{{ user.username }}</div>
                 </a>
             </div>
+            <div v-else>
+                <a href="/auth/steam">Log in with Steam</a>
+            </div>
         </div>
     </div>
 </div>

@@ -35,12 +35,6 @@ class HomeController extends AbstractController
 */
         
         return $inertia->render('Home', [
-            'message' => 'Hello world!',
-            'user' => [
-                'id' => $user->getId(),
-                'username' => $user->getUsername(),
-                'avatarURL' => $user->getAvatarUrl()
-            ]
         ]);
         // return $this->render("index.html.twig");
     }

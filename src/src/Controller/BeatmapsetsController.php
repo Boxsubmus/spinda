@@ -9,6 +9,7 @@ use App\Repository\BeatmapsetCommentVoteRepository;
 use App\Repository\BeatmapsetRepository;
 use App\Service\CommentVoteService;
 use App\Service\StorageService;
+use Nytodev\InertiaBundle\Service\Inertia;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,18 +25,61 @@ final class BeatmapsetsController extends AbstractController
     ) {}
 
     #[Route('/maps/{id}', name: 'app_beatmapsets')]
-    public function index($id, BeatmapsetRepository $repository, BeatmapsetCommentRepository $commentRepository, BeatmapsetCommentVoteRepository $votesRepo): Response
+    public function index($id, Inertia $inertia, BeatmapsetRepository $repository, BeatmapsetCommentRepository $commentRepository, BeatmapsetCommentVoteRepository $votesRepo): Response
     {
+
         $beatmapset = $repository->find($id);
+        $author = $beatmapset->getAuthor();
         $comments = $commentRepository->findByBeatmapset($beatmapset);
         $votes = $votesRepo->findUserVotesForComments($this->getUser(), $comments);
 
+        /*
         return $this->render('beatmapsets/index.html.twig', [
             'storage' => $this->storage,
             'controller_name' => 'BeatmapsetsController',
             'beatmapset' => $beatmapset,
             'comments' => $comments,
             'userVotes' => $votes,
+        ]);
+        */
+
+        $commentsData = array_map(function ($comment) use ($votes) {
+            $userVote = $votes[$comment->getId()] ?? null; // adjust based on what findUserVotesForComments returns
+
+            return [
+                'id' => $comment->getId(),
+                'content' => $comment->getContent(),
+                'createdAt' => $comment->getCreatedAt(),
+                'author' => [
+                    'id' => $comment->getAuthor()->getId(),
+                    'username' => $comment->getAuthor()->getUsername(),
+                    'avatarURL' => $comment->getAuthor()->getAvatarURL(),
+                ],
+                'userVote' => $userVote, // e.g. 'up', 'down', or null
+                'likes' => $comment->getLikes(),
+                'dislikes' => $comment->getDislikes()
+            ];
+        }, $comments);
+
+        return $inertia->render('beatmapsets/Index', [
+            'beatmapset' => [
+                'id' => $beatmapset->getId(),
+                'coverURL' => $beatmapset->getCoverUrl($this->storage),
+                'title' => $beatmapset->getTitle(),
+                'description' => $beatmapset->getDescription(),
+                'artist' => $beatmapset->getArtist(),
+                'createdAt' => $beatmapset->getCreatedAt(),
+                'author' => [
+                    'id' => $author->getId(),
+                    'username' => $author->getUsername(),
+                    'avatarURL' => $author->getAvatarURL()
+                ],
+                'likes' => $beatmapset->getLikes(),
+                'dislikes' => $beatmapset->getLikes(),
+                'downloads' => $beatmapset->getDownloads(),
+                'favorites' => $beatmapset->getFavorites(),
+                'comments' => $commentsData
+            ]
         ]);
     }
 
