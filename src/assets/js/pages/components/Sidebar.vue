@@ -2,6 +2,8 @@
 
 import { usePage } from '@inertiajs/vue3'
 import { computed } from 'vue'
+import { routes } from '../../routes';
+import { Link } from '@inertiajs/vue3';
 
 const page = usePage()
 const user = computed(() => page.props.auth.user)
@@ -25,14 +27,14 @@ const user = computed(() => page.props.auth.user)
 
         <div>
             <div v-if="user">
-                <a :href="user.id" class="flex flex-row items-center gap-3
+                <Link :href="routes.userShow(user.id)" class="flex flex-row items-center gap-3
                     rounded-lg p-2
                     hover:bg-zinc-800
                     cursor-pointer">
                 
                     <img :src="user.avatarURL" :alt="user.username" class="w-12 rounded">
                     <div>{{ user.username }}</div>
-                </a>
+                </Link>
             </div>
             <div v-else>
                 <a href="/auth/steam">Log in with Steam</a>

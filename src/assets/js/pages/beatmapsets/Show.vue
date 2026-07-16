@@ -4,6 +4,9 @@ import Markdown from '../components/Markdown.vue';
 import CommentVote from './CommentVote.vue';
 import ActionButton from '../components/ActionButton.vue';
 
+import { Link } from '@inertiajs/vue3';
+import { routes } from '../../routes.js';
+
 defineOptions({
     layout: [AppLayout, { title: 'beatmap info' }]
 })
@@ -45,7 +48,7 @@ const props = defineProps({
                             <div class="flex flex-col justify-center">
                                 <div>
                                     mapped by
-                                    <a class="font-semibold hover:underline" href="">{{ beatmapset.author.username }}</a>
+                                    <Link :href="routes.userShow(beatmapset.author.id)" class="font-semibold hover:underline" href="">{{ beatmapset.author.username }}</Link>
                                 </div>
                                 <p>submitted {{ beatmapset.createdAt.date }}</p>
                             </div>
@@ -135,14 +138,14 @@ const props = defineProps({
             <div v-for="comment in beatmapset.comments">
                 <div class="basic-border-t basic-border-b p-6">
             <div class="flex gap-3">
-                <a class="w-12 h-12 flex-none">
+                <Link :href="routes.userShow(comment.author.id)" class="w-12 h-12 flex-none">
                     <span class="inline-block w-full h-0 rounded bg-contain" :style="{ 'padding-bottom': '100%', 'background-image': 'url(' + comment.author.avatarURL + ')'}"></span>
-                </a>
+                </Link>
                 <div class="flex flex-1 flex-col">
                     <div class="flex">
-                        <a class="font-semibold text-xl hover:underline block -mt-2 -mb-1">
+                        <Link :href="routes.userShow(comment.author.id)" class="font-semibold text-xl hover:underline block -mt-2 -mb-1">
                             {{ comment.author.username }}
-                        </a>
+                        </Link>
                         <div class="ml-auto -mt-1.5 text-white/40">
                             <span>{{ comment.createdAt.date }}</span>
                         </div>

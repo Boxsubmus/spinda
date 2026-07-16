@@ -25,7 +25,7 @@ final class BeatmapsetsController extends AbstractController
     ) {}
 
     #[Route('/maps/{id}', name: 'app_beatmapsets')]
-    public function index($id, Inertia $inertia, BeatmapsetRepository $repository, BeatmapsetCommentRepository $commentRepository, BeatmapsetCommentVoteRepository $votesRepo): Response
+    public function show($id, Inertia $inertia, BeatmapsetRepository $repository, BeatmapsetCommentRepository $commentRepository, BeatmapsetCommentVoteRepository $votesRepo): Response
     {
 
         $beatmapset = $repository->find($id);
@@ -61,7 +61,7 @@ final class BeatmapsetsController extends AbstractController
             ];
         }, $comments);
 
-        return $inertia->render('beatmapsets/Index', [
+        return $inertia->render('beatmapsets/Show', [
             'beatmapset' => [
                 'id' => $beatmapset->getId(),
                 'coverURL' => $beatmapset->getCoverUrl($this->storage),
