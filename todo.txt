@@ -4,6 +4,7 @@ Remove or restructure api tokens to use cookies or smth (to separate logic betwe
 
 # LATER
 ----------------------------------------------------------
+* add statistics to front page
 * User profile beatmap listing may be using a ton of queries
 * add comment likes and dislikes (and enforce one like per user)
 * Add ability to leave comments at all

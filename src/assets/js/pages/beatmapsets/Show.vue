@@ -5,6 +5,8 @@ import CommentVote from './CommentVote.vue';
 import ActionButton from '../components/ActionButton.vue';
 import CommentForm from './CommentForm.vue';
 
+import { useTimeAgo } from '@vueuse/core';
+
 import { Link } from '@inertiajs/vue3';
 import { routes } from '../../routes.js';
 import { ref } from 'vue';
@@ -56,7 +58,7 @@ const dislikePercent = 100 - likePercent;
                                     mapped by
                                     <Link :href="routes.userShow(beatmapset.author.id)" class="font-semibold hover:underline" href="">{{ beatmapset.author.username }}</Link>
                                 </div>
-                                <p>submitted {{ beatmapset.createdAt.date }}</p>
+                                <p>submitted {{ useTimeAgo(beatmapset.createdAt.date + beatmapset.createdAt.timezone) }}</p>
                             </div>
                         </div>
                     </div>
@@ -163,7 +165,7 @@ const dislikePercent = 100 - likePercent;
                                 </Link>
                                 <div class="ml-auto flex">
                                 <div class="-mt-1.5 text-white/40">
-                                    <span>{{ comment.createdAt.date }}</span>
+                                    <span>{{ useTimeAgo(comment.createdAt.date + comment.createdAt.timezone) }}</span>
                                 </div>
                                 </div>
 

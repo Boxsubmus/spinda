@@ -2,6 +2,7 @@
 import AppLayout from '../layouts/AppLayout.vue';
 import Markdown from '../components/Markdown.vue';
 import BeatmapsetCard from '../components/BeatmapsetCard.vue';
+import { useTimeAgo } from '@vueuse/core';
 
 defineOptions({
     layout: [AppLayout, { title: 'user profile' }]
@@ -44,10 +45,14 @@ defineProps({
         <div class="bg-zinc-800 rounded-2xl overflow-hidden shadow p-6 basic-border">
             <h1 class="text-2xl">stats</h1>
             <div class="p-2">
-                Joined {{ user.createdAt.date }}
-                <br>
-                {{ user.mappingPoints }} mapping points
-                <i class="fas fa-hammer"></i>
+                <div>
+                    <i class="fas fa-calendar"></i>
+                    Joined {{ useTimeAgo(user.createdAt.date + user.createdAt.timezone) }}
+                </div>
+                <div>
+                    <i class="fas fa-hammer"></i>
+                    {{ user.mappingPoints }} mapping points
+                </div>
             </div>
         </div>
         <div class="flex grow"></div>

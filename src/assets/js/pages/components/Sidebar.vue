@@ -17,10 +17,10 @@ const user = computed(() => page.props.auth.user)
 
     <div class="m-6 flex flex-col grow">
 
-        <div>
-            <div class="text-3xl">Hyperspin</div>
-            <p>spin to win!</p>
-        </div>
+        <Link :href="routes.home()" class="hover:bg-zinc-800 flex flex-col rounded-lg p-3 py-2">
+            <span class="text-3xl">Hyperspin</span>
+            <span>spin to win!</span>
+        </Link>
 
         <div class="flex grow">
         </div>
