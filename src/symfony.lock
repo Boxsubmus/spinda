@@ -60,6 +60,18 @@
             "var/storage/.gitignore"
         ]
     },
+    "nytodev/inertia-bundle": {
+        "version": "3.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "3.0",
+            "ref": "dd21b7ae89da2606f2d4686057033ddb89f6b237"
+        },
+        "files": [
+            "config/packages/inertia.yaml"
+        ]
+    },
     "pentatrion/vite-bundle": {
         "version": "8.2",
         "recipe": {

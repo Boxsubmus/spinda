@@ -1515,6 +1515,24 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     controller_paths?: list<scalar|Param|null>,
  *     controllers_json?: scalar|Param|null, // Default: "%kernel.project_dir%/assets/controllers.json"
  * }
+ * @psalm-type InertiaConfig = array{
+ *     root_view?: scalar|Param|null, // The root Twig template used to render the full HTML page on first visit. // Default: "base.html.twig"
+ *     version?: scalar|Param|null, // Asset version string. When it changes, Inertia triggers a full page reload. Set to null to disable. // Default: null
+ *     encrypt_history?: bool|Param, // Globally enable browser history encryption for all Inertia responses. Can be overridden per-render via Inertia::encryptHistory(). // Default: false
+ *     expose_shared_prop_keys?: bool|Param, // When true, the page object includes a sharedProps field listing keys coming from Inertia::share(). Allows the client to distinguish shared from page-specific props. // Default: true
+ *     ssr_enabled?: bool|Param, // Enable Server-Side Rendering via an external Node.js SSR server. // Default: false
+ *     ssr_url?: scalar|Param|null, // URL of the SSR server (used only when ssr_enabled is true). // Default: "http://127.0.0.1:13714"
+ *     ssr_bundle?: scalar|Param|null, // Path to the SSR bundle JS file. If null, auto-detected from common paths (bootstrap/ssr/ssr.mjs, public/build/ssr/ssr.mjs). // Default: null
+ *     ssr_throw_on_error?: bool|Param, // When true, SSR rendering failures throw a SsrException instead of silently falling back to client-side rendering. Useful for E2E tests. // Default: false
+ *     pages?: array{ // Component file validation settings.
+ *         ensure_pages_exist?: bool|Param, // When true, Inertia::render() will throw if the component file does not exist on disk. Requires pages.paths to be configured. // Default: false
+ *         paths?: list<scalar|Param|null>,
+ *         extensions?: list<scalar|Param|null>,
+ *     },
+ *     testing?: array{ // Settings for test assertions (AssertableInertiaPage).
+ *         ensure_pages_exist?: bool|Param, // When true, AssertableInertiaPage::component() validates the file exists on disk. Uses pages.paths and pages.extensions. // Default: true
+ *     },
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -1529,6 +1547,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     pentatrion_vite?: PentatrionViteConfig,
  *     twig_component?: TwigComponentConfig,
  *     stimulus?: StimulusConfig,
+ *     inertia?: InertiaConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -1544,6 +1563,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         pentatrion_vite?: PentatrionViteConfig,
  *         twig_component?: TwigComponentConfig,
  *         stimulus?: StimulusConfig,
+ *         inertia?: InertiaConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -1559,6 +1579,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         pentatrion_vite?: PentatrionViteConfig,
  *         twig_component?: TwigComponentConfig,
  *         stimulus?: StimulusConfig,
+ *         inertia?: InertiaConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -1574,6 +1595,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         pentatrion_vite?: PentatrionViteConfig,
  *         twig_component?: TwigComponentConfig,
  *         stimulus?: StimulusConfig,
+ *         inertia?: InertiaConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,

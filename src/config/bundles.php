@@ -13,4 +13,5 @@ return [
     Pentatrion\ViteBundle\PentatrionViteBundle::class => ['all' => true],
     Symfony\UX\TwigComponent\TwigComponentBundle::class => ['all' => true],
     Symfony\UX\StimulusBundle\StimulusBundle::class => ['all' => true],
+    Nytodev\InertiaBundle\InertiaBundle::class => ['all' => true],
 ];

@@ -10,7 +10,7 @@ use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
 
 final class SessionTrackingListener
 {
-        public function __construct(
+    public function __construct(
         private EntityManagerInterface $em,
         private RequestStack $requestStack,
     ) {

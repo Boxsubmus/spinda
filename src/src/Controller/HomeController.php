@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\BeatmapsetRepository;
 use App\Service\MediaUrlHelper;
 use App\Service\StorageService;
+use Nytodev\InertiaBundle\Service\Inertia;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -16,7 +17,7 @@ class HomeController extends AbstractController
     ) {}
 
     #[Route('/', name: 'app_home')]
-    public function index(BeatmapsetRepository $repository): Response
+    public function index(Inertia $inertia, BeatmapsetRepository $repository): Response
     {
         /** @var \App\Entity\User|null $user */
         $user = $this->getUser();
@@ -33,6 +34,14 @@ class HomeController extends AbstractController
         }
 */
         
-        return $this->render("index.html.twig");
+        return $inertia->render('Home', [
+            'message' => 'Hello world!',
+            'user' => [
+                'id' => $user->getId(),
+                'username' => $user->getUsername(),
+                'avatarURL' => $user->getAvatarUrl()
+            ]
+        ]);
+        // return $this->render("index.html.twig");
     }
 }

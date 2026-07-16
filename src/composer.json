@@ -12,6 +12,7 @@
         "doctrine/orm": "^3.6",
         "league/commonmark": "^2.8",
         "league/flysystem-bundle": "^3.7",
+        "nytodev/inertia-bundle": "^3.0",
         "pentatrion/vite-bundle": "^8.2",
         "symfony/asset": "7.4.*",
         "symfony/console": "7.4.*",
