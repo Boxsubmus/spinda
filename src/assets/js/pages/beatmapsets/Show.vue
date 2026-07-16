@@ -6,6 +6,7 @@ import ActionButton from '../components/ActionButton.vue';
 
 import { Link } from '@inertiajs/vue3';
 import { routes } from '../../routes.js';
+import { ref } from 'vue';
 
 defineOptions({
     layout: [AppLayout, { title: 'beatmap info' }]
@@ -13,6 +14,10 @@ defineOptions({
 const props = defineProps({
     beatmapset: Object
 })
+
+const totalVotes = props.beatmapset.likes + props.beatmapset.dislikes;
+const likePercent = totalVotes > 0 ? (props.beatmapset.likes / totalVotes * 100) : 50;
+const dislikePercent = 100 - likePercent;
 
 </script>
 
@@ -95,6 +100,8 @@ const props = defineProps({
                                     </div>
 
                                     <div class="w-full h-2 bg-transparent rounded-full overflow-hidden flex gap-0.5">
+                                            <div class="bg-green-300 h-full transition-all rounded" :style="{ 'width': likePercent + '%' }"></div>
+                                            <div class="bg-red-400 h-full transition-all rounded" :style="{ 'width': dislikePercent + '%' }"></div>
                                     </div>
                                 </div>
                             </div>

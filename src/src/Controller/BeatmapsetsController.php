@@ -75,7 +75,7 @@ final class BeatmapsetsController extends AbstractController
                     'avatarURL' => $author->getAvatarURL()
                 ],
                 'likes' => $beatmapset->getLikes(),
-                'dislikes' => $beatmapset->getLikes(),
+                'dislikes' => $beatmapset->getDislikes(),
                 'downloads' => $beatmapset->getDownloads(),
                 'favorites' => $beatmapset->getFavorites(),
                 'comments' => $commentsData
