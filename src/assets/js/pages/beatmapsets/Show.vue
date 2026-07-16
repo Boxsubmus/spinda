@@ -3,6 +3,7 @@ import AppLayout from '../layouts/AppLayout.vue';
 import Markdown from '../components/Markdown.vue';
 import CommentVote from './CommentVote.vue';
 import ActionButton from '../components/ActionButton.vue';
+import CommentForm from './CommentForm.vue';
 
 import { Link } from '@inertiajs/vue3';
 import { routes } from '../../routes.js';
@@ -65,9 +66,9 @@ const dislikePercent = 100 - likePercent;
 
                         <!-- status -->
                         <div class="flex mx-auto mr-0">
-                            <span class="bg-orange-500 py-2 px-10 text-shadow-sm rounded-3xl font-bold basic-border
+                            <span class="bg-gray-500 py-2 px-10 text-shadow-sm rounded-3xl font-bold basic-border
                                 inline-flex items-center justify-center">
-                                    QUALITY
+                                    ARCHIVE
                             </span>
                         </div>
 
@@ -139,45 +140,56 @@ const dislikePercent = 100 - likePercent;
             </div>
         </div>
 
-        <div class="bg-zinc-800 rounded-2xl overflow-hidden shadow py-6 basic-border">
+        <div class="bg-zinc-800 rounded-2xl overflow-hidden shadow py-6 pb-0 basic-border">
             <h1 class="px-6 pb-6 text-2xl">comments</h1>
 
+            <div class="p-4">
+                <CommentForm
+                    :beatmapset-id="beatmapset.id"
+                />
+            </div>
+
+
             <div v-for="comment in beatmapset.comments">
-                <div class="basic-border-t basic-border-b p-6">
-            <div class="flex gap-3">
-                <Link :href="routes.userShow(comment.author.id)" class="w-12 h-12 flex-none">
-                    <span class="inline-block w-full h-0 rounded bg-contain" :style="{ 'padding-bottom': '100%', 'background-image': 'url(' + comment.author.avatarURL + ')'}"></span>
-                </Link>
-                <div class="flex flex-1 flex-col">
-                    <div class="flex">
-                        <Link :href="routes.userShow(comment.author.id)" class="font-semibold text-xl hover:underline block -mt-2 -mb-1">
-                            {{ comment.author.username }}
+                <div class="basic-border-t p-6">
+                    <div class="flex gap-3">
+                        <Link :href="routes.userShow(comment.author.id)" class="w-12 h-12 flex-none">
+                            <span class="inline-block w-full h-0 rounded bg-contain" :style="{ 'padding-bottom': '100%', 'background-image': 'url(' + comment.author.avatarURL + ')'}"></span>
                         </Link>
-                        <div class="ml-auto -mt-1.5 text-white/40">
-                            <span>{{ comment.createdAt.date }}</span>
+                        <div class="flex flex-1 flex-col">
+                            <div class="flex">
+                                <Link :href="routes.userShow(comment.author.id)" class="font-semibold text-xl hover:underline block -mt-2 -mb-1">
+                                    {{ comment.author.username }}
+                                </Link>
+                                <div class="ml-auto flex">
+                                <div class="-mt-1.5 text-white/40">
+                                    <span>{{ comment.createdAt.date }}</span>
+                                </div>
+                                </div>
+
+                            </div>
+
+                            <div style="font-family: Inter;">
+                                {{ comment.content }}
+                            </div>
+
+                            <div class="flex items-baseline flex-wrap gap-2">
+                                <div class="font-semibold">
+                                </div>
+                            </div>
+                            
+                                <CommentVote
+                                :comment-id="comment.id"
+                                :initial-likes="comment.likes"
+                                :initial-dislikes="comment.dislikes"
+                                :initial-user-vote="comment.userVote"
+                                />
+
                         </div>
                     </div>
-
-                    <div style="font-family: Inter;">
-                        {{ comment.content }}
-                    </div>
-
-                    <div class="flex items-baseline flex-wrap gap-2">
-                        <div class="font-semibold">
-                        </div>
-                    </div>
-                    
-                        <CommentVote
-                        :comment-id="comment.id"
-                        :initial-likes="comment.likes"
-                        :initial-dislikes="comment.dislikes"
-                        :initial-user-vote="comment.userVote"
-                        />
-
                 </div>
             </div>
-        </div>
-            </div>
+
         </div>
     </div>
 </template>

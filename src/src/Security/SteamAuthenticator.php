@@ -76,9 +76,11 @@ class SteamAuthenticator extends AbstractAuthenticator
                 if (!$user) {
                     $user = new User();
                     $user->setSteamid($steamId64);
+
+                    // @TOOD - allow the user to customize this when signing up
+                    $user->setUsername($player['personaname'] ?? $steamId64);
                 }
 
-                $user->setUsername($player['personaname'] ?? $steamId64);
                 $user->setAvatarUrl($player['avatarfull'] ?? null);
 
                 $this->em->persist($user);

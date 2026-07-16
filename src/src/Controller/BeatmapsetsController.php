@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Beatmapset;
 use App\Entity\BeatmapsetComment;
 use App\Entity\BeatmapsetCommentVote;
 use App\Repository\BeatmapsetCommentRepository;
@@ -9,8 +10,10 @@ use App\Repository\BeatmapsetCommentVoteRepository;
 use App\Repository\BeatmapsetRepository;
 use App\Service\CommentVoteService;
 use App\Service\StorageService;
+use Doctrine\ORM\EntityManagerInterface;
 use Nytodev\InertiaBundle\Service\Inertia;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -123,16 +126,31 @@ final class BeatmapsetsController extends AbstractController
         ]);
     }
 
-    #[Route('/api/debug-headers', name: 'debug_headers')]
-    public function debugHeaders(Request $request): \Symfony\Component\HttpFoundation\JsonResponse
-    {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+    #[Route('/api/maps/{id}/comments/post', name: 'app_comment_post', methods: ['POST'])]
+    public function createComment(
+        Beatmapset $beatmapset,
+        Request $request,
+        EntityManagerInterface $em,
+    ): RedirectResponse {
+        $content = trim($request->toArray()['content'] ?? '');
 
-        return $this->json([
-            'authorization_header' => $request->headers->get('Authorization'),
-            'all_headers' => $request->headers->all(),
-            'server_auth' => $_SERVER['HTTP_AUTHORIZATION'] ?? 'NOT SET',
-            'server_redirect_auth' => $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? 'NOT SET',
-        ]);
+        if ($content === '' || mb_strlen($content) > 1000) {
+            // Inertia expects validation errors as a keyed array on redirect back
+            throw ValidationException::withMessages([
+                'content' => 'Comment must be between 1 and 1000 characters.',
+            ]);
+        }
+
+        $comment = new BeatmapsetComment();
+        $comment->setContent($content);
+        $comment->setAuthor($this->getUser());
+        $comment->setBeatmapset($beatmapset);
+        $comment->setLikes(0);
+        $comment->setDislikes(0);
+        $comment->setCreatedAt(new \DateTimeImmutable());
+        $em->persist($comment);
+        $em->flush();
+
+        return $this->redirectToRoute('app_beatmapsets', ['id' => $beatmapset->getId()]);
     }
 }

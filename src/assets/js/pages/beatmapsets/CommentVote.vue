@@ -62,7 +62,7 @@ async function vote(type) {
 </script>
 
 <template>
-  <div class="flex gap-2">
+  <div class="flex gap-2 text-zinc-300">
     <button
       @click="vote('like')"
       :disabled="isVoting"

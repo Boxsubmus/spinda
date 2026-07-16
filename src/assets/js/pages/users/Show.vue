@@ -47,6 +47,7 @@ defineProps({
                 Joined {{ user.createdAt.date }}
                 <br>
                 {{ user.mappingPoints }} mapping points
+                <i class="fas fa-hammer"></i>
             </div>
         </div>
         <div class="flex grow"></div>

@@ -4,5 +4,6 @@ export const routes = {
 }
 
 export const apiRoutes = {
-  commentVote: (id, type) => `api/maps/comments/${id}/vote/${type}`,
+  commentVote: (id, type) => `/api/maps/comments/${id}/vote/${type}`,
+  commentPost: (beatmapid) => `/api/maps/${beatmapid}/comments/post`
 }
