@@ -12,6 +12,7 @@ use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
@@ -61,29 +62,18 @@ class SteamAuthenticator extends AbstractAuthenticator
         }
         $steamId64 = $matches[1];
 
-        $profileResponse = $client->request('GET', 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/', [
-            'query' => [
-                'key' => $_ENV['STEAM_API_KEY'],
-                'steamids' => $steamId64,
-            ],
-        ]);
-        $player = $profileResponse->toArray()['response']['players'][0] ?? [];
-
         return new SelfValidatingPassport(
-            new UserBadge($steamId64, function (string $steamId64) use ($player) {
+            new UserBadge($steamId64, function (string $steamId64) {
                 $user = $this->userRepository->findOneBy(['steamid' => $steamId64]);
 
                 if (!$user) {
-                    $user = new User();
-                    $user->setSteamid($steamId64);
-
-                    // @TOOD - allow the user to customize this when signing up
-                    $user->setUsername($player['personaname'] ?? $steamId64);
+                    throw new CustomUserMessageAuthenticationException(
+                        'No account found. Please sign in through the game client first.'
+                    );
                 }
 
-                $user->setAvatarUrl($player['avatarfull'] ?? null);
-
-                $this->em->persist($user);
+                // still refresh their profile info on each web login, just don't create
+                $user->setUsername($user->getUsername()); // or re-fetch profile if you want it kept fresh
                 $this->em->flush();
 
                 return $user;

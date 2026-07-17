@@ -2,7 +2,10 @@
 
 namespace App\Security;
 
+use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Service\GeoIpService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,7 +25,9 @@ class SteamTicketAuthenticator extends AbstractAuthenticator
     public function __construct(
         private UserRepository $userRepository,
         private \Symfony\Contracts\HttpClient\HttpClientInterface $httpClient,
-        private CsrfTokenManagerInterface $csrfTokenManager
+        private CsrfTokenManagerInterface $csrfTokenManager,
+        private EntityManagerInterface $em,
+        private GeoIpService $geoIpService
     ) {
     }
 
@@ -54,13 +59,40 @@ class SteamTicketAuthenticator extends AbstractAuthenticator
         }
 
         $steamId64 = $params['steamid'];
-        $user = $this->userRepository->findOneBy(['steamid' => $steamId64]);
 
-        if (!$user) {
-            throw new CustomUserMessageAuthenticationException('No account found for this Steam user.');
-        }
+        return new SelfValidatingPassport(
+            new UserBadge($steamId64, function (string $steamId64) use ($params, $request) {
+                $user = $this->userRepository->findOneBy(['steamid' => $steamId64]);
+                if (!$user) {
+                    // fetch profile info to populate the new account
+                    $profileResponse = $this->httpClient->request('GET', 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/', [
+                        'query' => [
+                            'key' => $_ENV['STEAM_API_KEY'],
+                            'steamids' => $steamId64,
+                        ],
+                    ]);
+                    
+                    $player = $profileResponse->toArray()['response']['players'][0] ?? [];
+                    $user = new User();
+                    $user->setSteamid($steamId64);
+                    $user->setUsername($player['personaname'] ?? $steamId64);
+                    $user->setAvatarUrl($player['avatarfull'] ?? null);
+                    $user->setCreatedAt(new \DateTimeImmutable());
 
-        return new SelfValidatingPassport(new UserBadge($steamId64, fn () => $user));
+                    $countryCode = $this->geoIpService->getCountryCode($request->getClientIp());
+                    if (!$countryCode) {
+                        $countryCode = 'XX';
+                    }
+                    $user->setCountryAcronym($countryCode);
+
+                    $user->setMappingPoints(0);
+
+                    $this->em->persist($user);
+                    $this->em->flush();
+                }
+                return $user;
+            })
+        );
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
