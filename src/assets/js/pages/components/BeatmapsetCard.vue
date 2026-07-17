@@ -1,6 +1,7 @@
 <script setup>
 import { Link } from '@inertiajs/vue3'
 import { routes } from '../../routes';
+import BeatmapStatus from '../beatmapsets/BeatmapStatus.vue';
 
 defineProps({
   beatmapset: { type: Object, required: true },

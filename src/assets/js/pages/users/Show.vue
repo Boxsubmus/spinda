@@ -2,6 +2,8 @@
 import AppLayout from '../layouts/AppLayout.vue';
 import Markdown from '../components/Markdown.vue';
 import BeatmapsetCard from '../components/BeatmapsetCard.vue';
+import CountryFlag from '../components/CountryFlag.vue';
+
 import { useTimeAgo } from '@vueuse/core';
 
 defineOptions({

@@ -12,6 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: BeatmapsetRepository::class)]
 class Beatmapset
 {
+    const STATES = [
+        'archive' => 0,
+    ];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -62,6 +66,9 @@ class Beatmapset
      */
     #[ORM\OneToMany(targetEntity: BeatmapsetComment::class, mappedBy: 'beatmapset', orphanRemoval: true)]
     private Collection $beatmapsetComments;
+
+    #[ORM\Column]
+    private ?bool $featured = null;
 
     public function __construct()
     {
@@ -285,6 +292,30 @@ class Beatmapset
                 $beatmapsetComment->setBeatmapset(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getState(): ?int
+    {
+        return $this->state;
+    }
+
+    public function setState(int $state): static
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    public function isFeatured(): ?bool
+    {
+        return $this->featured;
+    }
+
+    public function setFeatured(bool $featured): static
+    {
+        $this->featured = $featured;
 
         return $this;
     }

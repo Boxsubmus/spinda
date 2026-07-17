@@ -1,6 +1,7 @@
 # ASAP
 ----------------------------------------------------------
 Remove or restructure api tokens to use cookies or smth (to separate logic between web and game clients)
+* add rate limits to posting comments
 
 # LATER
 ----------------------------------------------------------

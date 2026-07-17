@@ -4,6 +4,7 @@ import Markdown from '../components/Markdown.vue';
 import CommentVote from './CommentVote.vue';
 import ActionButton from '../components/ActionButton.vue';
 import CommentForm from './CommentForm.vue';
+import BeatmapStatus from './BeatmapStatus.vue';
 
 import { useTimeAgo } from '@vueuse/core';
 
@@ -15,7 +16,8 @@ defineOptions({
     layout: [AppLayout, { title: 'beatmap info' }]
 })
 const props = defineProps({
-    beatmapset: Object
+    beatmapset: Object,
+    comments: Object
 })
 
 const totalVotes = props.beatmapset.likes + props.beatmapset.dislikes;
@@ -41,7 +43,7 @@ const dislikePercent = 100 - likePercent;
 
                 <!-- Content -->
                 <div class="relative z-10 flex flex-row gap-4 p-4">
-                    <img class="rounded-lg shadow w-52 h-52" :src="beatmapset.coverURL"/>
+                    <img class="rounded-lg shadow w-52 h-52" :src="beatmapset.coverUrl"/>
 
                     <div class="grid content-between text-shadow-lg grow">
                         <!-- title and artist -->
@@ -68,10 +70,7 @@ const dislikePercent = 100 - likePercent;
 
                         <!-- status -->
                         <div class="flex mx-auto mr-0">
-                            <span class="bg-gray-500 py-2 px-10 text-shadow-sm rounded-3xl font-bold basic-border
-                                inline-flex items-center justify-center">
-                                    ARCHIVE
-                            </span>
+                            <BeatmapStatus :beatmapset="beatmapset" />
                         </div>
 
                         <!-- box -->
@@ -152,7 +151,7 @@ const dislikePercent = 100 - likePercent;
             </div>
 
 
-            <div v-for="comment in beatmapset.comments">
+            <div v-for="comment in comments">
                 <div class="basic-border-t p-6">
                     <div class="flex gap-3">
                         <Link :href="routes.userShow(comment.author.id)" class="w-12 h-12 flex-none">

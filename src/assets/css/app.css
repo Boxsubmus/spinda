@@ -33,3 +33,33 @@
   @apply prose prose-zinc dark:prose-invert;
   font-family: Inter;
 }
+
+.flag-country {
+    --height: 1.25em;
+    --width-height-ratio: calc(100 / 72);
+
+    height: var(--height);
+    width: calc(var(--height) * var(--width-height-ratio));
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 3px;
+    position: relative;
+    display: block;
+    filter: saturate(1);    
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, .25));
+}
+
+.flag-country::after {
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 100%;
+	width: 100%;
+
+        background: inherit;
+        border-radius: inherit;
+        filter: contrast(0) brightness(2);
+        opacity: 0.25;
+        content: "";
+}

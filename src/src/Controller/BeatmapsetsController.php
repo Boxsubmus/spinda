@@ -8,6 +8,7 @@ use App\Entity\BeatmapsetCommentVote;
 use App\Repository\BeatmapsetCommentRepository;
 use App\Repository\BeatmapsetCommentVoteRepository;
 use App\Repository\BeatmapsetRepository;
+use App\Serializer\BeatmapsetSerializer;
 use App\Service\CommentVoteService;
 use App\Service\StorageService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -65,24 +66,8 @@ final class BeatmapsetsController extends AbstractController
         }, $comments);
 
         return $inertia->render('beatmapsets/Show', [
-            'beatmapset' => [
-                'id' => $beatmapset->getId(),
-                'coverURL' => $beatmapset->getCoverUrl($this->storage),
-                'title' => $beatmapset->getTitle(),
-                'description' => $beatmapset->getDescription(),
-                'artist' => $beatmapset->getArtist(),
-                'createdAt' => $beatmapset->getCreatedAt(),
-                'author' => [
-                    'id' => $author->getId(),
-                    'username' => $author->getUsername(),
-                    'avatarURL' => $author->getAvatarURL()
-                ],
-                'likes' => $beatmapset->getLikes(),
-                'dislikes' => $beatmapset->getDislikes(),
-                'downloads' => $beatmapset->getDownloads(),
-                'favorites' => $beatmapset->getFavorites(),
-                'comments' => $commentsData
-            ]
+            'beatmapset' => BeatmapsetSerializer::serializeVerbose($beatmapset, $this->storage),
+            'comments' => $commentsData
         ]);
     }
 
