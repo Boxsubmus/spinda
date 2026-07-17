@@ -23,8 +23,6 @@ class BeatmapsetSerializer
                 'username' => $author->getUsername(),
                 'avatarURL' => $author->getAvatarURL()
             ],
-            'likes' => $beatmapset->getLikes(),
-            'dislikes' => $beatmapset->getDislikes(),
             'downloads' => $beatmapset->getDownloads(),
             'favorites' => $beatmapset->getFavorites(),
             'featured' => $beatmapset->isFeatured()

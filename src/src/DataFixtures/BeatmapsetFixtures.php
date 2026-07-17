@@ -31,8 +31,6 @@ class BeatmapsetFixtures extends Fixture implements DependentFixtureInterface
         $map->setTitle($title);
         $map->setArtist( $artist);
         $map->setAuthor($user);
-        $map->setLikes(0);
-        $map->setDislikes(0);
         $map->setFavorites(0);
         $map->setCreatedAt(new \DateTimeImmutable());
         $map->setUpdatedAt(new \DateTimeImmutable());

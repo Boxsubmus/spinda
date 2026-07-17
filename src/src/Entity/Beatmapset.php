@@ -38,12 +38,6 @@ class Beatmapset
     private ?string $fileHash = null;
 
     #[ORM\Column]
-    private ?int $likes = null;
-
-    #[ORM\Column]
-    private ?int $dislikes = null;
-
-    #[ORM\Column]
     private ?int $favorites = null;
 
     #[ORM\Column]
@@ -136,30 +130,6 @@ class Beatmapset
     public function setFileHash(string $fileHash): static
     {
         $this->fileHash = $fileHash;
-
-        return $this;
-    }
-
-    public function getLikes(): ?int
-    {
-        return $this->likes;
-    }
-
-    public function setLikes(int $likes): static
-    {
-        $this->likes = $likes;
-
-        return $this;
-    }
-
-    public function getDislikes(): ?int
-    {
-        return $this->dislikes;
-    }
-
-    public function setDislikes(int $dislikes): static
-    {
-        $this->dislikes = $dislikes;
 
         return $this;
     }

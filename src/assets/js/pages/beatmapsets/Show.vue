@@ -85,29 +85,6 @@ const dislikePercent = 100 - likePercent;
                                 <i class="fas fa-heart"></i>
                                 {{ beatmapset.favorites }}
                             </span>
-
-                            <div class="col-span-2 bg-zinc-800 p-4 w-80 rounded basic-border">
-
-                                <div class="w-full max-w-sm mx-auto">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <button class="flex items-center gap-2 text-green-300">
-                                        <i class="fas fa-thumbs-up text-lg"></i>
-                                        <span class="text-sm">{{ beatmapset.likes }}</span>
-                                        </button>
-
-                                        <button class="flex items-center gap-2 text-red-400">
-                                        <span class="text-sm">{{ beatmapset.dislikes }}</span>
-                                        <i class="fas fa-thumbs-down text-lg -scale-x-100"></i>
-                                        </button>
-                                    </div>
-
-                                    <div class="w-full h-2 bg-transparent rounded-full overflow-hidden flex gap-0.5">
-                                            <div class="bg-green-300 h-full transition-all rounded" :style="{ 'width': likePercent + '%' }"></div>
-                                            <div class="bg-red-400 h-full transition-all rounded" :style="{ 'width': dislikePercent + '%' }"></div>
-                                    </div>
-                                </div>
-                            </div>
-
                         </div>
                     </div>
                 </div>
