@@ -20,10 +20,6 @@ const props = defineProps({
     comments: Object
 })
 
-const totalVotes = props.beatmapset.likes + props.beatmapset.dislikes;
-const likePercent = totalVotes > 0 ? (props.beatmapset.likes / totalVotes * 100) : 50;
-const dislikePercent = 100 - likePercent;
-
 </script>
 
 <template>
