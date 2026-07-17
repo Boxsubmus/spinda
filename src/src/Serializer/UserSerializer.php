@@ -8,6 +8,11 @@ class UserSerializer
 {
     public static function serializeVerbose(User $user): array
     {
+        $groupsData = [];
+        foreach ($user->getGroups() as $group) {
+            $groupsData[] = GroupSerializer::serializeVerbose($group);
+        }
+
         return [
             'id' => $user->getId(),
             'username' => $user->getUsername(),
@@ -19,7 +24,10 @@ class UserSerializer
 
             'mappingPoints' => $user->getMappingPoints(),
 
-            'aboutMe' => $user->getAboutMe()
+            'aboutMe' => $user->getAboutMe(),
+
+            'roles' => $user->getRoles(),
+            'groups' => $groupsData
         ];
     }
     

@@ -8,9 +8,12 @@ import BeatmapStatus from './BeatmapStatus.vue';
 
 import { useTimeAgo } from '@vueuse/core';
 
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import { routes } from '../../routes.js';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+
+const page = usePage()
+const auth = computed(() => page.props.auth)
 
 defineOptions({
     layout: [AppLayout, { title: 'beatmap info' }]
@@ -92,10 +95,12 @@ const props = defineProps({
                         icon="fa-download"
                     />
 
-                    <ActionButton
-                        label="Award"
-                        icon="fa-award"
-                    />
+                    <div v-if="auth.user.roles.includes('ROLE_ADMIN')">
+                        <ActionButton
+                            label="Award"
+                            icon="fa-award"
+                        />
+                    </div>
 
                     <div class="grow"></div>
 

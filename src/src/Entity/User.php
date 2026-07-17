@@ -22,12 +22,6 @@ class User implements UserInterface
     #[ORM\Column(length: 180)]
     private ?string $steamid = null;
 
-    /**
-     * @var list<string> The user roles
-     */
-    #[ORM\Column]
-    private array $roles = [];
-
     #[ORM\Column(length: 255)]
     private ?string $username = null;
 
@@ -64,11 +58,18 @@ class User implements UserInterface
     #[ORM\OneToMany(targetEntity: UserSession::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $userSessions;
 
+    /**
+     * @var Collection<int, Group>
+     */
+    #[ORM\ManyToMany(targetEntity: Group::class, inversedBy: 'users')]
+    private Collection $groups;
+
     public function __construct()
     {
         $this->beatmapsets = new ArrayCollection();
         $this->beatmapsetComments = new ArrayCollection();
         $this->userSessions = new ArrayCollection();
+        $this->groups = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -96,18 +97,6 @@ class User implements UserInterface
     public function getUserIdentifier(): string
     {
         return (string) $this->steamid;
-    }
-
-    /**
-     * @see UserInterface
-     */
-    public function getRoles(): array
-    {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
     }
 
     /**
@@ -296,5 +285,38 @@ class User implements UserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Group>
+     */
+    public function getGroups(): Collection
+    {
+        return $this->groups;
+    }
+
+    public function addGroup(Group $group): static
+    {
+        if (!$this->groups->contains($group)) {
+            $this->groups->add($group);
+        }
+
+        return $this;
+    }
+
+    public function removeGroup(Group $group): static
+    {
+        $this->groups->removeElement($group);
+
+        return $this;
+    }
+
+    public function getRoles(): array
+    {
+        $roles = ['ROLE_USER'];
+        foreach ($this->groups as $group) {
+            $roles = array_merge($roles, $group->getRoles());
+        }
+        return array_unique($roles);
     }
 }
