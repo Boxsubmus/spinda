@@ -10,6 +10,7 @@ use Symfony\Component\HttpClient\HttpClientInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
@@ -21,6 +22,7 @@ class SteamTicketAuthenticator extends AbstractAuthenticator
     public function __construct(
         private UserRepository $userRepository,
         private \Symfony\Contracts\HttpClient\HttpClientInterface $httpClient,
+        private CsrfTokenManagerInterface $csrfTokenManager
     ) {
     }
 
@@ -63,7 +65,13 @@ class SteamTicketAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        return new JsonResponse(['username' => $token->getUser()->getUsername()]);
+        /** @var \App\Entity\User|null $user */
+        $user = $token->getUser();
+
+        return new JsonResponse([
+            'username' => $user->getUsername(),
+            'csrf_token' => $this->csrfTokenManager->getToken('steam_client')->getValue()
+        ]);
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
