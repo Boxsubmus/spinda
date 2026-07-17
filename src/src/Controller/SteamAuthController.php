@@ -34,11 +34,4 @@ class SteamAuthController extends AbstractController
         // Intercepted by SteamAuthenticator before this ever runs
         throw $this->createAccessDeniedException();
     }
-
-    #[Route('/api/auth/steam-client', name: 'api_auth_steam_client', methods: ['POST'])]
-    public function steamClientAuth(): Response
-    {
-        // Intercepted by SteamTicketAuthenticator before this ever runs
-        throw $this->createAccessDeniedException();
-    }
 }

@@ -4,6 +4,7 @@ namespace App\Security;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Service\SessionTrackingService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,6 +25,7 @@ class SteamAuthenticator extends AbstractAuthenticator
         private UserRepository $userRepository,
         private EntityManagerInterface $em,
         private UrlGeneratorInterface $urlGenerator,
+        private SessionTrackingService $sessionTrackingService
     ) {
     }
 
@@ -83,6 +85,13 @@ class SteamAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        $session = $request->getSession();
+        $oldSessionId = $session->getId();
+        $session->migrate(true);
+        $newSessionId = $session->getId();
+
+        $this->sessionTrackingService->track($oldSessionId, $newSessionId, $token->getUser());
+
         return new RedirectResponse($this->urlGenerator->generate('app_home'));
     }
 

@@ -17,6 +17,15 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
+    public function findOneByUsernameCaseInsensitive(string $username): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('LOWER(u.username) = LOWER(:username)')
+            ->setParameter('username', $username)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function paginate(int $page = 1, int $perPage = 10): array
     {
         $qb = $this->createQueryBuilder('u')

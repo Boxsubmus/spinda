@@ -13,7 +13,7 @@ class UserSession
     private ?string $sessionId = null;
 
     #[ORM\ManyToOne(inversedBy: 'userSessions')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?User $user = null;
 
     #[ORM\Column(nullable: true)]
