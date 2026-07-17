@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Beatmapset;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -22,6 +23,25 @@ class BeatmapsetRepository extends ServiceEntityRepository
             ->orderBy('b.id', 'DESC')
             ->getQuery()
             ->getResult();
+    }
+
+    public function paginate(int $page = 1, int $perPage = 10): array
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->orderBy('u.id', 'DESC');
+
+        $query = $qb->getQuery()
+            ->setFirstResult(($page - 1) * $perPage)
+            ->setMaxResults($perPage);
+
+        $paginator = new Paginator($query, fetchJoinCollection: false);
+        $total = count($paginator);
+
+        return [
+            'items' => iterator_to_array($paginator),
+            'total' => $total,
+            'lastPage' => (int) ceil($total / $perPage),
+        ];
     }
 
 //    /**

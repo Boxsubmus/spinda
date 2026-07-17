@@ -28,7 +28,7 @@ final class BeatmapsetsController extends AbstractController
         private readonly StorageService $storage,
     ) {}
 
-    #[Route('/maps/{id}', name: 'app_beatmapsets')]
+    #[Route('/maps/{id}', name: 'app_beatmapsets_show')]
     public function show($id, Inertia $inertia, BeatmapsetRepository $repository, BeatmapsetCommentRepository $commentRepository, BeatmapsetCommentVoteRepository $votesRepo): Response
     {
 
@@ -68,6 +68,28 @@ final class BeatmapsetsController extends AbstractController
         return $inertia->render('beatmapsets/Show', [
             'beatmapset' => BeatmapsetSerializer::serializeVerbose($beatmapset, $this->storage),
             'comments' => $commentsData
+        ]);
+    }
+
+    #[Route('/maps', name: 'app_beatmapsets_index')]
+    public function index(Request $request, Inertia $inertia, BeatmapsetRepository $repository)
+    {
+        $page = max(1, (int) $request->query->get('page', 1));
+        $perPage = 10;
+
+        $result = $repository->paginate($page, $perPage);
+
+        return $inertia->render('beatmapsets/Index', [
+            'beatmapsets' => array_map(
+                fn(Beatmapset $beatmap) => BeatmapsetSerializer::serializeVerbose($beatmap, $this->storage),
+                $result['items']
+            ),
+            'pagination' => [
+                'currentPage' => $page,
+                'lastPage' => $result['lastPage'],
+                'perPage' => $perPage,
+                'total' => $result['total'],
+            ],
         ]);
     }
 
