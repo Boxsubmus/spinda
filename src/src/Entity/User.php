@@ -346,6 +346,6 @@ class User implements UserInterface
             return false;
         }
 
-        return $this->lastSeenAt > new \DateTimeImmutable('-300 seconds');
+        return $this->lastSeenAt > new \DateTimeImmutable('-10 seconds');
     }
 }

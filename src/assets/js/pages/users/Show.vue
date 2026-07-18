@@ -99,15 +99,24 @@ async function saveAboutMe() {
 <div class="flex flex-row gap-4">
 
     <div class="flex flex-col">
-        <div class="bg-zinc-800 rounded-2xl overflow-hidden shadow p-6 basic-border">
-            <h1 class="text-2xl">stats</h1>
-            <div class="p-2">
+        <div class="bg-zinc-800 rounded-2xl overflow-hidden shadow p-4 basic-border">
+            <div class="p-2 flex flex-col gap-2">
                 <div>
-                    <i class="fas fa-calendar"></i>
+                    <div v-if="user.isOnline">
+                        <span class="text-green-300 font-semibold">ONLINE</span>
+                    </div>
+                    <div v-else class="flex flex-col">
+                        <span class="text-red-300 font-semibold mr-2">OFFLINE</span>
+                        <span class="text-white/60">Last seen {{ useTimeAgo(user.lastSeenAt.date + user.lastSeenAt.timezone) }}</span>
+                    </div>
+                    <hr class="h-px text-white/40 mt-2">
+                </div>
+                <div>
+                    <i class="fas fa-calendar mr-2"></i>
                     Joined {{ useTimeAgo(user.createdAt.date + user.createdAt.timezone) }}
                 </div>
                 <div>
-                    <i class="fas fa-hammer"></i>
+                    <i class="fas fa-hammer mr-1"></i>
                     {{ user.mappingPoints }} mapping points
                 </div>
             </div>

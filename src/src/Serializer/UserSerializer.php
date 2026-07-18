@@ -29,7 +29,9 @@ class UserSerializer
             'roles' => $user->getRoles(),
             'groups' => $groupsData,
 
-            'isAdmin' => $user->isAdmin()
+            'isAdmin' => $user->isAdmin(),
+            'isOnline' => $user->isOnline(),
+            'lastSeenAt' => $user->getLastSeenAt()
         ];
     }
     
@@ -46,7 +48,9 @@ class UserSerializer
 
             'mappingPoints' => $user->getMappingPoints(),
 
-            'isAdmin' => $user->isAdmin()
+            'isAdmin' => $user->isAdmin(),
+            'isOnline' => $user->isOnline(),
+            'lastSeenAt' => $user->getLastSeenAt()
         ];
     }
 }
