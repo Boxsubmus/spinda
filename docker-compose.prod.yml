@@ -7,7 +7,7 @@ services:
       geoip-updater:
         condition: service_completed_successfully
       database:
-        condition: service_started
+        condition: service_healthy
     env_file:
       - .env.prod
     restart: unless-stopped
@@ -42,8 +42,10 @@ services:
     volumes:
       - geoip_data:/var/www/html/var/geoip:ro
     depends_on:
-      - app
-      - database
+      app:
+        condition: service_started
+      database:
+        condition: service_healthy
     env_file:
       - .env.prod
     restart: unless-stopped
