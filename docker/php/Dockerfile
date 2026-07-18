@@ -18,6 +18,8 @@ RUN apt-get update && apt-get install -y libicu-dev libzip-dev zip \
     && docker-php-ext-install intl pdo pdo_mysql opcache zip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
 WORKDIR /var/www/html
 COPY src/ .
 COPY --from=vendor /app/vendor ./vendor
