@@ -25,6 +25,9 @@ COPY src/ .
 COPY --from=vendor /app/vendor ./vendor
 COPY --from=frontend /app/public/build ./public/build
 
+RUN mkdir -p public/uploads var/cache var/log \
+    && chown -R www-data:www-data public/uploads var/cache var/log
+
 RUN composer dump-autoload --optimize --no-dev
 
 COPY docker/php/conf.d/session.ini /usr/local/etc/php/conf.d/session.ini
