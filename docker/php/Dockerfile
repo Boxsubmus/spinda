@@ -26,6 +26,6 @@ COPY --from=frontend /app/public/build ./public/build
 RUN composer dump-autoload --optimize --no-dev \
     && php bin/console cache:warmup --env=prod
 
-COPY conf.d/session.ini /usr/local/etc/php/conf.d/session.ini
+COPY docker/php/conf.d/session.ini /usr/local/etc/php/conf.d/session.ini
 
 CMD ["php-fpm"]
