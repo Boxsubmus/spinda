@@ -5,14 +5,18 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Repository\BeatmapsetRepository;
 use App\Repository\UserRepository;
+use App\Security\Voter\UserVoter;
 use App\Serializer\BeatmapsetSerializer;
 use App\Serializer\UserSerializer;
 use App\Service\StorageService;
 use Nytodev\InertiaBundle\Service\Inertia;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 final class UserController extends AbstractController
 {
@@ -64,6 +68,32 @@ final class UserController extends AbstractController
                 'perPage' => $perPage,
                 'total' => $result['total'],
             ],
+        ]);
+    }
+
+    #[Route('/api/users/{id}/about', name: 'app_user_aboutme_edit', methods: ['POST'])]
+    public function aboutMeEdit(User $userEditing, Request $request, UserRepository $userRepository, CsrfTokenManagerInterface $csrfTokenManager, \Doctrine\ORM\EntityManagerInterface $em): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted(UserVoter::EDIT, $userEditing);
+
+        $token = $request->headers->get('X-CSRF-TOKEN');
+        if (!$csrfTokenManager->isTokenValid(new CsrfToken('inertia', $token))) {
+            return new JsonResponse(['error' => 'Invalid CSRF token'], 403);
+        }
+
+        $content = trim($request->toArray()['content'] ?? '');
+
+        if (mb_strlen($content) > 2048) {
+            return new JsonResponse(['error' => 'Content is too long!'], 413);
+        }
+
+        $userEditing->setAboutMe($content);
+        $em->persist($userEditing);
+        $em->flush();
+
+        return $this->json([
+            'aboutMe' => $userEditing->getAboutMe(),
         ]);
     }
 }

@@ -27,7 +27,9 @@ class UserSerializer
             'aboutMe' => $user->getAboutMe(),
 
             'roles' => $user->getRoles(),
-            'groups' => $groupsData
+            'groups' => $groupsData,
+
+            'isAdmin' => $user->isAdmin()
         ];
     }
     
@@ -43,6 +45,8 @@ class UserSerializer
             'countryFlagUrl' => $user->getCountryFlagUrl(),
 
             'mappingPoints' => $user->getMappingPoints(),
+
+            'isAdmin' => $user->isAdmin()
         ];
     }
 }

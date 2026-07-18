@@ -3,17 +3,58 @@ import AppLayout from '../layouts/AppLayout.vue';
 import Markdown from '../components/Markdown.vue';
 import BeatmapsetCard from '../components/BeatmapsetCard.vue';
 import CountryFlag from '../components/CountryFlag.vue';
+import MarkdownEditor from '../components/MarkdownEditor.vue';
+import ActionButton from '../components/ActionButton.vue';
+import axios from 'axios';
 
 import { useTimeAgo } from '@vueuse/core';
+import { usePage } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
 
 defineOptions({
     layout: [AppLayout, { title: 'user profile' }]
 })
 
-defineProps({
+const props = defineProps({
     user: Object,
     beatmaps: Object
 })
+
+const page = usePage();
+const aboutMeDraft = ref(props.user.aboutMe || '');
+const isOwnProfile = computed(() => (page.props.auth?.user?.id === props.user.id) || page.props.auth?.user?.isAdmin);
+
+const isEditing = ref(false);
+const saving = ref(false);
+
+function startEditing() {
+    aboutMeDraft.value = props.user.aboutMe || '';
+    isEditing.value = true;
+}
+
+function cancelEditing() {
+    isEditing.value = false;
+}
+
+
+async function saveAboutMe() {
+    saving.value = true;
+
+    try {
+        // Only send a post request when this changes lol
+        if (props.user.aboutMe != aboutMeDraft.value)
+        {
+            const response = await axios.post(`/api/users/${props.user.id}/about`, { content: aboutMeDraft.value });
+            // Update about me so it's immediately reflected
+            props.user.aboutMe = response.data.aboutMe;
+            isEditing.value = false;
+        }
+    } catch (e) {
+        console.error('Post failed', e);
+    } finally {
+        saving.value = false;
+    }
+}
 
 </script>
 
@@ -73,16 +114,52 @@ defineProps({
 
 
     <div class="flex flex-col grow gap-4">
-        <div class="bg-zinc-800 rounded-2xl overflow-hidden shadow p-6 basic-border">
-            <h1 class="text-2xl">about me!</h1>
-            <div v-if="user.aboutMe">
-                <Markdown :source="user.aboutMe" />
+
+        <!-- about me! -->
+        <div class="bg-zinc-800 rounded-2xl overflow-hidden shadow p-6 basic-border flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-2xl">about me!</h1>
+                <button
+                    v-if="isOwnProfile && !isEditing"
+                    @click="startEditing"
+                    class="text-sm text-gray-400 hover:text-white cursor-pointer"
+                >
+                    <i class="fas fa-pen"></i> edit
+                </button>
             </div>
+
+            <div v-if="isEditing">
+                <MarkdownEditor v-model="aboutMeDraft" />
+                <div class="flex gap-2 mt-3">
+                    
+                    <form @submit.prevent="saveAboutMe">
+                        <ActionButton
+                                :label="saving ? 'Saving...' : 'Save'"
+                                icon="fas fa-save"
+                                type="submit"
+                                :disabled="saving"
+                            />
+                    </form>
+                    <form @submit.prevent="cancelEditing">
+                        <ActionButton
+                                label="Cancel"
+                                icon="fas fa-times"
+                                type="submit"
+                                :disabled="saving"
+                                class="bg-gray-500 hover:bg-gray-400"
+                        />
+                    </form>
+                </div>
+            </div>
+
             <div v-else>
-                nothing here... :<
+                <div v-if="user.aboutMe">
+                    <Markdown :source="user.aboutMe" />
+                </div>
+                <div v-else>
+                    nothing here... :<
+                </div>
             </div>
-
-
         </div>
 
         <div class="bg-zinc-800 rounded-2xl overflow-hidden shadow p-6 basic-border">

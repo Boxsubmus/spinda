@@ -28,7 +28,8 @@ final class InertiaShareListener
                 'steamId' => $user->getSteamid(),
                 'username' => $user->getUsername(),
                 'avatarURL' => $user->getAvatarUrl(),
-                'roles' => $user->getRoles()
+                'roles' => $user->getRoles(),
+                'isAdmin' => $user->isAdmin()
             ];
         }
 

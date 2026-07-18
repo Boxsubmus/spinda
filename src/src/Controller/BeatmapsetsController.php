@@ -158,6 +158,6 @@ final class BeatmapsetsController extends AbstractController
         $em->persist($comment);
         $em->flush();
 
-        return $this->redirectToRoute('app_beatmapsets', ['id' => $beatmapset->getId()]);
+        return $this->redirectToRoute('app_beatmapsets_show', ['id' => $beatmapset->getId()]);
     }
 }

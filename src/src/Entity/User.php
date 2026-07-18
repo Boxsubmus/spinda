@@ -319,4 +319,9 @@ class User implements UserInterface
         }
         return array_unique($roles);
     }
+
+    public function isAdmin(): bool
+    {
+        return in_array('ROLE_ADMIN', $this->getRoles(), true);
+    }
 }
