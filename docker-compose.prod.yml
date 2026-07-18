@@ -23,6 +23,7 @@ services:
     ports:
       - "80:80"
     volumes:
+      - ./docker/nginx/certs:/etc/nginx/certs:ro
       - app_public:/var/www/html/public:ro
       - uploads_data:/var/www/html/public/uploads:ro
     depends_on:
