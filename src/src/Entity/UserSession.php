@@ -20,9 +20,9 @@ class UserSession
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(length: 6)]
-    private ?string $type = null;
+    private ?string $source = null;
 
-    public function getSessionId(): ?int
+    public function getSessionId(): ?string
     {
         return $this->sessionId;
     }
@@ -58,14 +58,14 @@ class UserSession
         return $this;
     }
 
-    public function getType(): ?string
+    public function getSource(): ?string
     {
-        return $this->type;
+        return $this->source;
     }
 
-    public function setType(string $type): static
+    public function setSource(string $source): static
     {
-        $this->type = $type;
+        $this->source = $source;
 
         return $this;
     }

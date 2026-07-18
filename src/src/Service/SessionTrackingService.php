@@ -28,7 +28,7 @@ class SessionTrackingService
             $userSession = new UserSession();
             $userSession->setSessionId($newSessionId);
             $userSession->setCreatedAt(new \DateTimeImmutable());
-            $userSession->setType($type);
+            $userSession->setSource($type);
             $this->em->persist($userSession);
         }
 
