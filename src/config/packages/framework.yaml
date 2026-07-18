@@ -7,6 +7,7 @@ framework:
         cookie_secure: auto
         cookie_samesite: lax
         cookie_lifetime: 2592000   # 30 days, in seconds
+        gc_maxlifetime: 2592000
 
     trusted_proxies: '127.0.0.1,REMOTE_ADDR'
     trusted_headers: ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port']

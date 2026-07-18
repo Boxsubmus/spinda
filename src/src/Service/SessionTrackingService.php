@@ -12,7 +12,7 @@ class SessionTrackingService
     {
     }
 
-    public function track(string $oldSessionId, string $newSessionId, User $user): void
+    public function track(string $oldSessionId, string $newSessionId, User $user, string $type): void
     {
         // Remove the old session's tracking row, if any
         if ($oldSessionId !== $newSessionId) {
@@ -22,13 +22,13 @@ class SessionTrackingService
             }
         }
 
-
         $userSession = $this->em->find(UserSession::class, $newSessionId);
 
         if (!$userSession) {
             $userSession = new UserSession();
             $userSession->setSessionId($newSessionId);
             $userSession->setCreatedAt(new \DateTimeImmutable());
+            $userSession->setType($type);
             $this->em->persist($userSession);
         }
 

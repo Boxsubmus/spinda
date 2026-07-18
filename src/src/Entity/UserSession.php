@@ -19,6 +19,9 @@ class UserSession
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column(length: 6)]
+    private ?string $type = null;
+
     public function getSessionId(): ?int
     {
         return $this->sessionId;
@@ -51,6 +54,18 @@ class UserSession
     public function setCreatedAt(?\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): static
+    {
+        $this->type = $type;
 
         return $this;
     }

@@ -75,8 +75,8 @@ class SteamAuthenticator extends AbstractAuthenticator
                 }
 
                 // still refresh their profile info on each web login, just don't create
-                $user->setUsername($user->getUsername()); // or re-fetch profile if you want it kept fresh
-                $this->em->flush();
+                // $user->setUsername($user->getUsername()); // or re-fetch profile if you want it kept fresh
+                // $this->em->flush();
 
                 return $user;
             })
@@ -85,12 +85,13 @@ class SteamAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        $session = $request->getSession();
-        $oldSessionId = $session->getId();
-        $session->migrate(true);
-        $newSessionId = $session->getId();
+                $session = $request->getSession();
+                $oldSessionId = $session->getId();
+                $session->migrate(true);
+                $newSessionId = $session->getId();
 
-        $this->sessionTrackingService->track($oldSessionId, $newSessionId, $token->getUser());
+                $this->sessionTrackingService->track($oldSessionId, $newSessionId, $token->getUser(), "web");
+
 
         return new RedirectResponse($this->urlGenerator->generate('app_home'));
     }

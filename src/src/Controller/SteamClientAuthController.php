@@ -62,7 +62,7 @@ class SteamClientAuthController extends AbstractController
         $session->migrate(true);
         $newSessionId = $session->getId();
         
-        $this->sessionTrackingService->track($oldSessionId, $newSessionId, $user);
+        $this->sessionTrackingService->track($oldSessionId, $newSessionId, $user, "game");
 
         return $this->json([
             'result' => SteamAuthResult::SUCCESS->value,

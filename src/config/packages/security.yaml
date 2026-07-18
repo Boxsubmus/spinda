@@ -12,6 +12,9 @@ security:
                 property: steamid
         # used to reload user from session & other features (e.g. switch_user)
 
+    # Disable's Symfony's automatic migration
+    session_fixation_strategy: none
+
     firewalls:
         dev:
             # Ensure dev tools and static assets are always allowed
