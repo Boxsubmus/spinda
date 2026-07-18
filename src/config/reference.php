@@ -1511,10 +1511,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     },
  *     controllers_json?: scalar|Param|null, // Deprecated: The "twig_component.controllers_json" config option is deprecated, and will be removed in 3.0. // Default: null
  * }
- * @psalm-type StimulusConfig = array{
- *     controller_paths?: list<scalar|Param|null>,
- *     controllers_json?: scalar|Param|null, // Default: "%kernel.project_dir%/assets/controllers.json"
- * }
  * @psalm-type InertiaConfig = array{
  *     root_view?: scalar|Param|null, // The root Twig template used to render the full HTML page on first visit. // Default: "base.html.twig"
  *     version?: scalar|Param|null, // Asset version string. When it changes, Inertia triggers a full page reload. Set to null to disable. // Default: null
@@ -1546,7 +1542,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     flysystem?: FlysystemConfig,
  *     pentatrion_vite?: PentatrionViteConfig,
  *     twig_component?: TwigComponentConfig,
- *     stimulus?: StimulusConfig,
  *     inertia?: InertiaConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
@@ -1562,7 +1557,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         flysystem?: FlysystemConfig,
  *         pentatrion_vite?: PentatrionViteConfig,
  *         twig_component?: TwigComponentConfig,
- *         stimulus?: StimulusConfig,
  *         inertia?: InertiaConfig,
  *     },
  *     "when@prod"?: array{
@@ -1578,7 +1572,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         flysystem?: FlysystemConfig,
  *         pentatrion_vite?: PentatrionViteConfig,
  *         twig_component?: TwigComponentConfig,
- *         stimulus?: StimulusConfig,
  *         inertia?: InertiaConfig,
  *     },
  *     "when@test"?: array{
@@ -1594,7 +1587,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         flysystem?: FlysystemConfig,
  *         pentatrion_vite?: PentatrionViteConfig,
  *         twig_component?: TwigComponentConfig,
- *         stimulus?: StimulusConfig,
  *         inertia?: InertiaConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
