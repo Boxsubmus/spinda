@@ -1,6 +1,6 @@
 services:
   app:
-    image: ghcr.io/Boxsubmus/spinda-app:latest
+    image: ghcr.io/boxsubmus/spinda-app:latest
     depends_on:
       - database
 

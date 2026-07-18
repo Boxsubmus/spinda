@@ -1,17 +1,17 @@
 services:
   app:
     build:
-      context: ./docker/php
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: docker/php/Dockerfile.dev
     image: spinda-app-dev
     volumes:
       - ./src:/var/www/html
     environment:
       APP_ENV: dev
-    user: "1000:1000"   # match your host UID:GID from `id -u` / `id -g`
+    user: "1000:1000"
     ports:
       - "5173:5173"
-  
+
   webserver:
     ports:
       - "1337:80"
@@ -35,8 +35,8 @@ services:
 
   scheduler:
     build:
-      context: ./docker/php
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: docker/php/Dockerfile.dev
     command: php bin/console messenger:consume scheduler_default -vv
     depends_on:
       - app

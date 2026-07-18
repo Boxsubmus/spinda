@@ -35,6 +35,7 @@ class BeatmapsetFixtures extends Fixture implements DependentFixtureInterface
         $map->setCreatedAt(new \DateTimeImmutable());
         $map->setUpdatedAt(new \DateTimeImmutable());
         $map->setDownloads(0);
+        $map->setFeatured(false);
 
         $beatmapFile = new UploadedFile(
             __DIR__ . '/Files/' . $zip,

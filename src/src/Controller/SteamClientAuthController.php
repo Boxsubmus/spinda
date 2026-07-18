@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\UserSession;
 use App\Enum\SteamAuthResult;
+use App\Repository\GroupRepository;
 use App\Repository\UserRepository;
 use App\Security\SteamTicketAuthenticator;
 use App\Service\GeoIpService;
@@ -27,7 +28,8 @@ class SteamClientAuthController extends AbstractController
         private UserAuthenticatorInterface $userAuthenticator,
         private SteamTicketAuthenticator $steamTicketAuthenticator,
         private GeoIpService $geoIpService,
-        private SessionTrackingService $sessionTrackingService
+        private SessionTrackingService $sessionTrackingService,
+        private GroupRepository $groupRepository
     ) {
     }
 
@@ -154,6 +156,12 @@ class SteamClientAuthController extends AbstractController
 
         $user->setMappingPoints(0);
         $user->setLastSeenAt(new \DateTimeImmutable());
+
+
+        $playtesterGroup = $this->groupRepository->findOneBy(['name' => 'playtester']);
+        if ($playtesterGroup) {
+            $user->addGroup($playtesterGroup);
+        }
 
         $this->em->persist($user);
         $this->em->flush();
