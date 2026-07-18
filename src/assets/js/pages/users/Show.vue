@@ -107,7 +107,7 @@ async function saveAboutMe() {
                     </div>
                     <div v-else class="flex flex-col">
                         <span class="text-red-300 font-semibold mr-2">OFFLINE</span>
-                        <span class="text-white/60">Last seen {{ useTimeAgo(user.lastSeenAt.date + user.lastSeenAt.timezone) }}</span>
+                        <span v-if="user.lastSeenAt" class="text-white/60">Last seen {{ useTimeAgo(user.lastSeenAt.date + user.lastSeenAt.timezone) }}</span>
                     </div>
                     <hr class="h-px text-white/40 mt-2">
                 </div>

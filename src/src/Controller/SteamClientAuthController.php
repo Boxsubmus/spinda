@@ -72,7 +72,7 @@ class SteamClientAuthController extends AbstractController
             'result' => SteamAuthResult::SUCCESS->value,
             'user_id' => $user->getId(),
             'username' => $user->getUsername(),
-            'csrf_token' => $this->csrfTokenManager->getToken('vote')->getValue(),
+            'csrf_token' => $this->csrfTokenManager->getToken('steam_client')->getValue(),
         ]);
     }
 
