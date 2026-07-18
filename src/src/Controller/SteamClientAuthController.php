@@ -55,6 +55,10 @@ class SteamClientAuthController extends AbstractController
     {
         $this->userAuthenticator->authenticateUser($user, $this->steamTicketAuthenticator, $request);
 
+        // Update last seen at when opening the game as that counts as "online"
+        $user->setLastSeenAt(new \DateTimeImmutable());
+        $this->em->persist($user);
+
         // Regenerate the session ID to prevent fixation and avoid PK collisions
         // in UserSession when a still-valid cookie survives a relaunch.
         $session = $request->getSession();
@@ -148,7 +152,7 @@ class SteamClientAuthController extends AbstractController
         $user->setCountryAcronym($countryCode);
 
         $user->setMappingPoints(0);
-
+        $user->setLastSeenAt(new \DateTimeImmutable());
 
         $this->em->persist($user);
         $this->em->flush();
