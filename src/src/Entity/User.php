@@ -64,6 +64,9 @@ class User implements UserInterface
     #[ORM\ManyToMany(targetEntity: Group::class, inversedBy: 'users')]
     private Collection $groups;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $lastSeenAt = null;
+
     public function __construct()
     {
         $this->beatmapsets = new ArrayCollection();
@@ -323,5 +326,26 @@ class User implements UserInterface
     public function isAdmin(): bool
     {
         return in_array('ROLE_ADMIN', $this->getRoles(), true);
+    }
+
+    public function getLastSeenAt(): ?\DateTimeImmutable
+    {
+        return $this->lastSeenAt;
+    }
+
+    public function setLastSeenAt(?\DateTimeImmutable $lastSeenAt): static
+    {
+        $this->lastSeenAt = $lastSeenAt;
+
+        return $this;
+    }
+
+    public function isOnline(): bool
+    {
+        if (!$this->lastSeenAt) {
+            return false;
+        }
+
+        return $this->lastSeenAt > new \DateTimeImmutable('-300 seconds');
     }
 }
