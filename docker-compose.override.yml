@@ -19,6 +19,11 @@ services:
       - ./src:/var/www/html
 
   database:
+    environment:
+      MARIADB_DATABASE: spinda
+      MARIADB_USER: app
+      MARIADB_PASSWORD: app
+      MARIADB_ROOT_PASSWORD: root
     ports:
       - "3306:3306"
 
