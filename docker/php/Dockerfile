@@ -25,9 +25,11 @@ COPY src/ .
 COPY --from=vendor /app/vendor ./vendor
 COPY --from=frontend /app/public/build ./public/build
 
-RUN composer dump-autoload --optimize --no-dev \
-    && php bin/console cache:warmup --env=prod
+RUN composer dump-autoload --optimize --no-dev
 
 COPY docker/php/conf.d/session.ini /usr/local/etc/php/conf.d/session.ini
+COPY docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["php-fpm"]
