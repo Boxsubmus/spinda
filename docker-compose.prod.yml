@@ -53,6 +53,16 @@ services:
       - .env.prod
     restart: unless-stopped
 
+  phpmyadmin:
+    image: phpmyadmin:latest
+    environment:
+      PMA_HOST: database
+    ports:
+      - "127.0.0.1:8081:80"
+    depends_on:
+      - database
+    restart: unless-stopped
+
 volumes:
   app_public_build:
   db_data:
