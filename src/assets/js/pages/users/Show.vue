@@ -36,7 +36,6 @@ function cancelEditing() {
     isEditing.value = false;
 }
 
-
 async function saveAboutMe() {
     saving.value = true;
 
@@ -47,6 +46,10 @@ async function saveAboutMe() {
             const response = await axios.post(`/api/users/${props.user.id}/about`, { content: aboutMeDraft.value });
             // Update about me so it's immediately reflected
             props.user.aboutMe = response.data.aboutMe;
+            isEditing.value = false;
+        }
+        else
+        {
             isEditing.value = false;
         }
     } catch (e) {
@@ -162,7 +165,7 @@ async function saveAboutMe() {
             </div>
         </div>
 
-        <div class="bg-zinc-800 rounded-2xl overflow-hidden shadow p-6 basic-border">
+        <div v-if="false" class="bg-zinc-800 rounded-2xl overflow-hidden shadow p-6 basic-border">
             <h1 class="text-2xl">maps</h1>
 
             <div class="p-0 rounded-2xl mt-6">

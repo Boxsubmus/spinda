@@ -30,6 +30,9 @@ services:
     App\EventListener\InertiaShareListener:
         tags:
             - { name: kernel.event_listener, event: kernel.request }
+    App\EventListener\InertiaExceptionListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
 
     App\Service\GeoIpService:
         arguments:
