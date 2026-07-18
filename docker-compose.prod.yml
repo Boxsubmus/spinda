@@ -1,14 +1,17 @@
 services:
   app:
     image: ghcr.io/boxsubmus/spinda-app:latest
+    volumes:
+      - geoip_data:/var/www/html/var/geoip:ro
     depends_on:
-      - database
+      geoip-updater:
+        condition: service_completed_successfully
+      database:
+        condition: service_started
     env_file:
       - .env.prod
     restart: unless-stopped
 
-  # Runs once per deploy: copies the freshly-built assets from the image
-  # into a shared volume, then exits. webserver waits for this to finish.
   assets:
     image: ghcr.io/boxsubmus/spinda-app:latest
     entrypoint: ["sh", "-c", "rm -rf /shared/* && cp -r /var/www/html/public/build/. /shared/"]
@@ -41,6 +44,8 @@ services:
   scheduler:
     image: ghcr.io/boxsubmus/spinda-app:latest
     command: php bin/console messenger:consume scheduler_default -vv
+    volumes:
+      - geoip_data:/var/www/html/var/geoip:ro
     depends_on:
       - app
       - database

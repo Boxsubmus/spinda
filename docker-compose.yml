@@ -1,8 +1,17 @@
 services:
   app:
     image: ghcr.io/boxsubmus/spinda-app:latest
+    volumes:
+      - geoip_data:/var/www/html/var/geoip:ro
     depends_on:
       - database
+
+  geoip-updater:
+    image: alpine:3.20
+    command: sh -c "apk add --no-cache curl && curl -fL -o /data/GeoLite2-Country.mmdb https://github.com/P3TERX/GeoLite.mmdb/releases/latest/download/GeoLite2-Country.mmdb"
+    volumes:
+      - geoip_data:/data
+    restart: "no"
 
   webserver:
     image: nginx:stable-alpine
@@ -18,3 +27,4 @@ services:
 
 volumes:
   db_data:
+  geoip_data:
