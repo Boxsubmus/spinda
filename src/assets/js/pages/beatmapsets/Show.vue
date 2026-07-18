@@ -92,20 +92,20 @@ const props = defineProps({
                 <div class="z-10 flex flex-row p-4 gap-2 basic-border-t" style="background-color: hsla(0, 0%, 0%, 0.3);">
                     <ActionButton
                         label="Download"
-                        icon="fa-download"
+                        icon="fas fa-download"
                     />
 
                     <div v-if="auth.user.roles.includes('ROLE_ADMIN')">
                         <ActionButton
                             label="Award"
-                            icon="fa-award"
+                            icon="fas fa-award"
                         />
                     </div>
 
                     <div class="grow"></div>
 
                     <ActionButton
-                        icon="fa-heart"
+                        icon="fas fa-heart"
                     />
                 </div>
 

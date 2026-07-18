@@ -25,6 +25,7 @@ security:
             custom_authenticators:
                 - App\Security\SteamAuthenticator
                 - App\Security\SteamTicketAuthenticator
+            entry_point: App\Security\SteamAuthEntryPoint
             logout:
                 path: /logout
 
@@ -38,9 +39,11 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/auth/steam, roles: PUBLIC_ACCESS }
         - { path: ^/api/auth/steam-client/check, roles: PUBLIC_ACCESS }
         - { path: ^/api/auth/steam-client/register, roles: PUBLIC_ACCESS }
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
     security:

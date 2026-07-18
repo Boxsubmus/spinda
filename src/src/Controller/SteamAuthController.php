@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Nytodev\InertiaBundle\Service\Inertia;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,6 +11,16 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class SteamAuthController extends AbstractController
 {
+    #[Route('/login', name: 'app_login')]
+    public function login(Inertia $inertia, UrlGeneratorInterface $urlGenerator)
+    {
+        if ($this->getUser()) {
+            return new RedirectResponse($urlGenerator->generate('app_home'));
+        }
+        return $inertia->render('Login', [
+        ]);
+    }
+
     #[Route('/auth/steam', name: 'auth_steam_start')]
     public function start(UrlGeneratorInterface $urlGenerator): RedirectResponse
     {

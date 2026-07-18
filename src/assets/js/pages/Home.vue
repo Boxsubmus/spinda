@@ -2,7 +2,7 @@
 import AppLayout from './layouts/AppLayout.vue';
 
 defineOptions({
-    layout: [AppLayout, { title: 'beatmap info' }]
+    layout: [AppLayout, { title: 'home' }]
 })
 </script>
 

@@ -140,7 +140,8 @@ class SteamClientAuthController extends AbstractController
         $user->setAvatarUrl($player['avatarfull'] ?? null);
         $user->setCreatedAt(new \DateTimeImmutable());
 
-        $countryCode = $this->geoIpService->getCountryCode('108.227.234.61');
+        $ip = $request->getClientIp();
+        $countryCode = $this->geoIpService->getCountryCode($ip);
         if (!$countryCode) {
             $countryCode = 'XX';
         }

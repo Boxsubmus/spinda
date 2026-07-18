@@ -57,7 +57,7 @@ function submit() {
       <ActionButton
         label="Post"
         type="submit"
-        icon="fa-paper-plane"
+        icon="fas fa-paper-plane"
         :disabled="form.processing || !form.content.trim()"
       />
     </div>

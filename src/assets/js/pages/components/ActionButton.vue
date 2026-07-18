@@ -42,7 +42,7 @@ if (props.class)
       {{ label }}
     </span>
     <span class="text-xl justify-center flex">
-      <i class="m-0 fas" :class="icon"></i>
+      <i class="m-0" :class="icon"></i>
     </span>
   </component>
 </template>
