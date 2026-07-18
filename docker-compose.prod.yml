@@ -14,7 +14,7 @@ services:
 
   assets:
     image: ghcr.io/boxsubmus/spinda-app:latest
-    entrypoint: ["sh", "-c", "rm -rf /shared/* && cp -r /var/www/html/public/. /shared/ && rm -rf /shared/uploads"]
+    entrypoint: ["sh", "-c", "rm -rf /shared/* && cp -r /var/www/html/public/. /shared/ && rm -rf /shared/uploads && mkdir -p /shared/uploads"]
     volumes:
       - app_public:/shared
     restart: "no"
