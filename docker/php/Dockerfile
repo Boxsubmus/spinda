@@ -26,7 +26,8 @@ COPY --from=vendor /app/vendor ./vendor
 COPY --from=frontend /app/public/build ./public/build
 
 RUN mkdir -p public/uploads var/cache var/log \
-    && chown -R www-data:www-data public/uploads var/cache var/log
+    && chown -R www-data:www-data public/uploads var/cache var/log \
+    && chmod -R a+rX public/images
 
 RUN composer dump-autoload --optimize --no-dev
 
