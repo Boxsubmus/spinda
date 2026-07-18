@@ -34,7 +34,7 @@ RUN groupadd -g 1000 appuser \
 WORKDIR /var/www/html
 RUN chown -R appuser:appuser /var/www/html
 
-COPY conf.d/session.ini /usr/local/etc/php/conf.d/session.ini
+COPY docker/php/conf.d/session.ini /usr/local/etc/php/conf.d/session.ini
 
 # Start PHP-FPM
 CMD ["php-fpm"]
