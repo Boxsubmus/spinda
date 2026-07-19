@@ -90,7 +90,7 @@ async function saveAboutMe() {
 
             </div>
             <div class="flex flex-row gap-2">
-                <img class="w-7" :src="user.countryFlagUrl"/>
+                <CountryFlag :flag-url="user.countryFlagUrl" class="top-[5px]"/>
                 <span class="text-lg">{{ user.countryName }}</span>
             </div>
         </div>
