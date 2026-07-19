@@ -108,7 +108,7 @@ async function saveAboutMe() {
                         <span class="text-green-300 font-semibold">ONLINE</span>
                     </div>
                     <div v-else class="flex flex-col">
-                        <span class="text-red-300 font-semibold mr-2">OFFLINE</span>
+                        <span class="text-gray-300 font-semibold mr-2">OFFLINE</span>
                         <span v-if="user.lastSeenAt" class="text-white/60">Last seen
                             <DateTimeSpan :dateTime="user.lastSeenAt" />
                             </span>
