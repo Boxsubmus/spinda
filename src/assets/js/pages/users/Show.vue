@@ -5,9 +5,11 @@ import BeatmapsetCard from '../components/BeatmapsetCard.vue';
 import CountryFlag from '../components/CountryFlag.vue';
 import MarkdownEditor from '../components/MarkdownEditor.vue';
 import ActionButton from '../components/ActionButton.vue';
+import DateTimeSpan from '../components/DateTimeSpan.vue';
+
 import axios from 'axios';
 
-import { useTimeAgo } from '@vueuse/core';
+import { useDateFormat, useTimeAgo } from '@vueuse/core';
 import { usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
@@ -88,7 +90,7 @@ async function saveAboutMe() {
 
             </div>
             <div class="flex flex-row gap-2">
-                <img class="w-7" :src="user.countryFlagUrl"/>
+                <CountryFlag :flag-url="user.countryFlagUrl" class="top-[5px]"/>
                 <span class="text-lg">{{ user.countryName }}</span>
             </div>
         </div>
@@ -107,13 +109,16 @@ async function saveAboutMe() {
                     </div>
                     <div v-else class="flex flex-col">
                         <span class="text-red-300 font-semibold mr-2">OFFLINE</span>
-                        <span v-if="user.lastSeenAt" class="text-white/60">Last seen {{ useTimeAgo(user.lastSeenAt.date + user.lastSeenAt.timezone) }}</span>
+                        <span v-if="user.lastSeenAt" class="text-white/60">Last seen
+                            <DateTimeSpan :dateTime="user.lastSeenAt" />
+                            </span>
                     </div>
                     <hr class="h-px text-white/40 mt-2">
                 </div>
                 <div>
                     <i class="fas fa-calendar mr-2"></i>
-                    Joined {{ useTimeAgo(user.createdAt.date + user.createdAt.timezone) }}
+                    Joined
+                    <DateTimeSpan :dateTime="user.createdAt" />
                 </div>
                 <div>
                     <i class="fas fa-hammer mr-1"></i>
