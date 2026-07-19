@@ -7,6 +7,16 @@ import axios from "axios";
 import { router } from "@inertiajs/vue3";
 
 createInertiaApp({
+  progress: {
+    // The delay after which the progress bar will appear, in milliseconds...
+    delay: 0,
+    // The color of the progress bar...
+    color: "#76aebc",
+    // Whether to include the default NProgress styles...
+    includeCSS: true,
+    // Whether the NProgress spinner will be shown...
+    showSpinner: false,
+  },
   resolve: (name) => {
     const pages = import.meta.glob('./pages/**/*.vue', { eager: true })
     return pages[`./pages/${name}.vue`]
