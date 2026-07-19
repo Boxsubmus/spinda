@@ -85,7 +85,7 @@ const data = {
         <div class="flex flex-col gap-4">
 
             <Link :href="routes.home()" class="hover:bg-zinc-800 flex flex-col rounded-lg p-3 py-2">
-                <span class="text-3xl">Hyperspin</span>
+                <span class="text-3xl">Hyperspin!</span>
                 <span>spin to win!</span>
             </Link>
 
