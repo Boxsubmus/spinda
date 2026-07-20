@@ -40,6 +40,15 @@ const props = defineProps({
                 <!-- dark overlay so text stays readable -->
                 <div class="absolute inset-0" style="background-color: hsla(0, 0%, 0%, 0.2);"></div>
 
+                <div class="z-10 flex p-4 pb-0">
+                    <div v-for="diff in beatmapset.difficulties" class="bg-black/40 p-3 rounded-xl">
+                        <div class="flex">
+                            <span class="rounded-full border-4 w-7 h-7" :style="{'border-color': '#' + diff.color}"></span>
+                            <span class="pl-2">{{ diff.name }}</span>
+                        </div>
+                    </div>
+                </div>
+                
                 <!-- Content -->
                 <div class="relative z-10 flex flex-row gap-4 p-4">
                     <img class="rounded-lg shadow w-52 h-52" :src="beatmapset.coverUrl"/>

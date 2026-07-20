@@ -24,7 +24,7 @@ const props = defineProps({
 
             <Paginate
             :pagination="pagination"
-            base-url="/users"    
+            base-url="/maps"    
         />
 
 </template>

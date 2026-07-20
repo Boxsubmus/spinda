@@ -43,6 +43,9 @@ class BeatmapDifficulty
     #[ORM\Column]
     private ?int $difficulty = null;
 
+    #[ORM\Column(length: 6, nullable: true)]
+    private ?string $color = null;
+
     public function __construct()
     {
         $this->beatmapOwners = new ArrayCollection();
@@ -171,6 +174,18 @@ class BeatmapDifficulty
     public function setDifficulty(int $difficulty): static
     {
         $this->difficulty = $difficulty;
+
+        return $this;
+    }
+
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    public function setColor(?string $color): static
+    {
+        $this->color = $color;
 
         return $this;
     }

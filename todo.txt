@@ -1,6 +1,6 @@
 # ASAP
 ----------------------------------------------------------
-* add rate limits to posting comments
+* possible beatmap upload exploit: two mapsets that have the same content will have the same hash, so deleting one could delete both
 
 # LATER
 ----------------------------------------------------------
@@ -10,7 +10,6 @@
 * Add ability to leave comments at all
 * Add 404 pages when going to beatmaps which don't exist
 * Add download beatmaps (and enforcing a rate limit)
-* Add user roles
 * Add featuring beatmaps
 * Finish sidebar
 * Add signing in through the game client

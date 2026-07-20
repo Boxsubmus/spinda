@@ -32,21 +32,9 @@ final class BeatmapsetsController extends AbstractController
     #[Route('/maps/{id}', name: 'app_beatmapsets_show')]
     public function show($id, Inertia $inertia, BeatmapsetRepository $repository, BeatmapsetCommentRepository $commentRepository, BeatmapsetCommentVoteRepository $votesRepo): Response
     {
-
         $beatmapset = $repository->find($id);
-        $author = $beatmapset->getAuthor();
         $comments = $commentRepository->findByBeatmapset($beatmapset);
         $votes = $votesRepo->findUserVotesForComments($this->getUser(), $comments);
-
-        /*
-        return $this->render('beatmapsets/index.html.twig', [
-            'storage' => $this->storage,
-            'controller_name' => 'BeatmapsetsController',
-            'beatmapset' => $beatmapset,
-            'comments' => $comments,
-            'userVotes' => $votes,
-        ]);
-        */
 
         $commentsData = array_map(function ($comment) use ($votes) {
             $userVote = $votes[$comment->getId()] ?? null; // adjust based on what findUserVotesForComments returns
