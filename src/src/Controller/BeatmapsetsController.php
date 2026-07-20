@@ -9,6 +9,7 @@ use App\Repository\BeatmapsetCommentRepository;
 use App\Repository\BeatmapsetCommentVoteRepository;
 use App\Repository\BeatmapsetRepository;
 use App\Serializer\BeatmapsetSerializer;
+use App\Service\BeatmapsetStorageService;
 use App\Service\CommentVoteService;
 use App\Service\StorageService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -159,5 +160,20 @@ final class BeatmapsetsController extends AbstractController
         $em->flush();
 
         return $this->redirectToRoute('app_beatmapsets_show', ['id' => $beatmapset->getId()]);
+    }
+
+    #[Route('/api/_io/index-beatmapset/{id}', methods: ['POST'])]
+    public function io_indexBeatmapset($id,
+        BeatmapsetRepository $repository,
+        Request $request,
+        EntityManagerInterface $em,
+        BeatmapsetStorageService $beatmapsetStorageService): Response
+    {
+        $beatmapset = $repository->find($id);
+        $result = $beatmapsetStorageService->regenerateCovers($beatmapset);
+
+        return $this->json([
+            'result' => $result,
+        ]);
     }
 }

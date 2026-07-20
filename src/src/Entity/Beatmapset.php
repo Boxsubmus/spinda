@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Model\BeatmapsetArchive;
 use App\Repository\BeatmapsetRepository;
 use App\Service\StorageService;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -63,6 +64,9 @@ class Beatmapset
      */
     #[ORM\OneToMany(targetEntity: BeatmapDifficulty::class, mappedBy: 'beatmapset')]
     private Collection $beatmapDifficulties;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $packageHash = null;
 
     public function __construct()
     {
@@ -224,7 +228,7 @@ class Beatmapset
 
         return $this;
     }
-    
+
     public function setState(int $state): static
     {
         $this->state = $state;
@@ -279,4 +283,34 @@ class Beatmapset
         return $storage->$storage->fileExists($path);
     }
 
+    public function getPackageHash(): ?string
+    {
+        return $this->packageHash;
+    }
+
+    public function setPackageHash(?string $packageHash): static
+    {
+        $this->packageHash = $packageHash;
+
+        return $this;
+    }
+
+    public function getPackagePath(StorageService $storage): ?string
+    {
+        if ($this->packageHash == null)
+            return null;
+
+        $path = "beatmapset_files/" . $this->packageHash . ".zip";
+
+        return $path;
+    }
+
+    public function getPackageUrl(StorageService $storage): ?string
+    {
+        if ($this->packageHash == null)
+            return null;
+
+        $path = "beatmapset_files/" . $this->packageHash . ".zip";
+        return $storage->getPublicUrl($path);
+    }
 }

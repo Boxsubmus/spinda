@@ -70,7 +70,7 @@ class StorageService
             throw new \RuntimeException('Invalid image type. Allowed: JPEG, PNG, WEBP, GIF');
         }
 
-        if ($file->getSize() > 1 * 1024 * 1024) {
+        if ($file->getSize() > 1 * 1024 * 1024 * 1024) {
             throw new \RuntimeException('Image too large. Max: 1MB');
         }
 
@@ -183,6 +183,16 @@ class StorageService
     {
         return $this->storage->publicUrl($path);
         // return $this->baseUrl . '/' . ltrim($path, '/');
+    }
+
+    public function fileExists(string $location): bool
+    {
+        return $this->storage->fileExists($location);
+    }
+
+    public function readStream(string $path)
+    {
+        return $this->storage->readStream($path);
     }
 
     /**
