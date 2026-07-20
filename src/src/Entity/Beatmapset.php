@@ -28,29 +28,26 @@ class Beatmapset
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $description = null;
-
     #[ORM\Column(length: 255)]
     private ?string $artist = null;
 
-    #[ORM\Column(length: 64, unique: true, nullable: false)]
-    private ?string $fileHash = null;
-
-    #[ORM\Column]
-    private ?int $favorites = null;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $approvedAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true, options: ['default' => 0])]
     private ?int $downloads = null;
+    
+    #[ORM\Column(nullable: true, options: ['default' => 0])]
+    private ?int $favorites = null;
 
     #[ORM\Column(type: Types::BIGINT)]
     private ?string $filesize = null;
@@ -61,12 +58,16 @@ class Beatmapset
     #[ORM\OneToMany(targetEntity: BeatmapsetComment::class, mappedBy: 'beatmapset', orphanRemoval: true)]
     private Collection $beatmapsetComments;
 
-    #[ORM\Column]
-    private ?bool $featured = null;
+    /**
+     * @var Collection<int, BeatmapDifficulty>
+     */
+    #[ORM\OneToMany(targetEntity: BeatmapDifficulty::class, mappedBy: 'beatmapset')]
+    private Collection $beatmapDifficulties;
 
     public function __construct()
     {
         $this->beatmapsetComments = new ArrayCollection();
+        $this->beatmapDifficulties = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -122,18 +123,6 @@ class Beatmapset
         return $this;
     }
 
-    public function getFileHash(): ?string
-    {
-        return $this->fileHash;
-    }
-
-    public function setFileHash(string $fileHash): static
-    {
-        $this->fileHash = $fileHash;
-
-        return $this;
-    }
-
     public function getFavorites(): ?int
     {
         return $this->favorites;
@@ -145,37 +134,7 @@ class Beatmapset
 
         return $this;
     }
-
-    /**
-     * Get file URL using StorageService
-     */
-    public function getFileUrl(StorageService $storage): string
-    {
-        return $storage->getUrlFromHash(
-            $this->fileHash,
-            'beatmap',
-            'zip'
-        );
-    }
-
-    public function getCoverUrl(StorageService $storage): string
-    {
-        $path = sprintf('beatmaps/%d/covers/list.jpg', $this->id);
-        return $storage->getPublicUrl($path);
-    }
-
-    public function hasCover(StorageService $storage): bool
-    {
-        $path = sprintf('beatmaps/%d/covers/list.jpg', $this->id);
-        return $storage->$storage->fileExists($path);
-    }
-
-    public function getBannerUrl(StorageService $storage): string
-    {
-        $path = sprintf('beatmaps/%d/covers/banner.png', $this->id);
-        return $storage->getPublicUrl($path);
-    }
-
+    
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
@@ -265,12 +224,7 @@ class Beatmapset
 
         return $this;
     }
-
-    public function getState(): ?int
-    {
-        return $this->state;
-    }
-
+    
     public function setState(int $state): static
     {
         $this->state = $state;
@@ -280,13 +234,49 @@ class Beatmapset
 
     public function isFeatured(): ?bool
     {
-        return $this->featured;
+        return false;
     }
 
-    public function setFeatured(bool $featured): static
+    /**
+     * @return Collection<int, BeatmapDifficulty>
+     */
+    public function getBeatmapDifficulties(): Collection
     {
-        $this->featured = $featured;
+        return $this->beatmapDifficulties;
+    }
+
+    public function addBeatmapDifficulty(BeatmapDifficulty $beatmapDifficulty): static
+    {
+        if (!$this->beatmapDifficulties->contains($beatmapDifficulty)) {
+            $this->beatmapDifficulties->add($beatmapDifficulty);
+            $beatmapDifficulty->setBeatmapset($this);
+        }
 
         return $this;
     }
+
+    public function removeBeatmapDifficulty(BeatmapDifficulty $beatmapDifficulty): static
+    {
+        if ($this->beatmapDifficulties->removeElement($beatmapDifficulty)) {
+            // set the owning side to null (unless already changed)
+            if ($beatmapDifficulty->getBeatmapset() === $this) {
+                $beatmapDifficulty->setBeatmapset(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCoverUrl(StorageService $storage): string
+    {
+        $path = sprintf('beatmaps/%d/covers/list.jpg', $this->id);
+        return $storage->getPublicUrl($path);
+    }
+
+    public function hasCover(StorageService $storage): bool
+    {
+        $path = sprintf('beatmaps/%d/covers/list.jpg', $this->id);
+        return $storage->$storage->fileExists($path);
+    }
+
 }
