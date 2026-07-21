@@ -43,7 +43,7 @@ class BeatmapsetRepository extends ServiceEntityRepository
             'lastPage' => (int) ceil($total / $perPage),
         ];
     }
-
+    
 //    /**
 //     * @return Beatmapset[] Returns an array of Beatmapset objects
 //     */

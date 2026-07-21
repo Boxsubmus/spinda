@@ -163,9 +163,8 @@ import DescriptionEdit from './DescriptionEdit.vue';
                     <form @submit.prevent="feature">
                     <div v-if="auth.user.roles.includes('ROLE_ADMIN')">
                         <ActionButton
-                            label="Feature"
+                            :label="beatmapset.featured ? 'Un-feature' : 'Feature'"
                             icon="fas fa-award"
-                            class="bg-green-600 hover:bg-green-400"
                             type="submit"
                         />
                     </div>

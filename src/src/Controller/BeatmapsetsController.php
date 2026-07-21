@@ -6,10 +6,12 @@ use App\Entity\Beatmapset;
 use App\Entity\BeatmapsetComment;
 use App\Entity\BeatmapsetCommentVote;
 use App\Entity\FavoriteBeatmapset;
+use App\Entity\User;
 use App\Repository\BeatmapsetCommentRepository;
 use App\Repository\BeatmapsetCommentVoteRepository;
 use App\Repository\BeatmapsetRepository;
 use App\Repository\FavoriteBeatmapsetRepository;
+use App\Repository\UserRepository;
 use App\Security\Voter\BeatmapsetVoter;
 use App\Serializer\BeatmapsetSerializer;
 use App\Service\BeatmapsetStorageService;
@@ -243,20 +245,34 @@ final class BeatmapsetsController extends AbstractController
     public function feature(
         $id,
         BeatmapsetRepository $repository,
+        UserRepository $userRepository,
         EntityManagerInterface $em): Response
     {
         /** @var Beatmapset $beatmapset */
         $beatmapset = $repository->find($id);
-        $user = $this->getUser();
 
-        $beatmapset->setIsFeatured(true);
-        $beatmapset->setFeaturedAt(new \DateTimeImmutable());
-        $em->persist($beatmapset);
+        /** @var User $featuringUser */
+        $featuringUser = $this->getUser();
 
+        $alreadyFeatured = $beatmapset->getIsFeatured();
+        $delta = $alreadyFeatured ? -1 : 1;
+        if (!$alreadyFeatured) {
+            $beatmapset->setIsFeatured(true);
+            $beatmapset->setFeaturedAt(new \DateTimeImmutable());
+            $em->persist($beatmapset);
+        }
+        else {
+            $beatmapset->setIsFeatured(false);
+            $beatmapset->setFeaturedAt(null);
+            $em->persist($beatmapset);
+        }
+        
         $em->flush();
 
+        $userRepository->incrementMappingPointCount($beatmapset->getAuthor(), $delta);
+
         return $this->json([
-            'featured' => true,
+            'featured' => $delta === 1,
         ]);
     }
 }

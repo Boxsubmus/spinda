@@ -45,6 +45,17 @@ class UserRepository extends ServiceEntityRepository
         ];
     }
 
+    public function incrementMappingPointCount(User $user, int $delta): void
+    {
+        $this->getEntityManager()->createQuery(
+            'UPDATE App\Entity\User u SET u.mappingPoints = u.mappingPoints + :delta WHERE u.id = :id'
+        )
+        ->setParameter('delta', $delta)
+        ->setParameter('id', $user->getId())
+        ->execute();
+    }
+
+
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */
