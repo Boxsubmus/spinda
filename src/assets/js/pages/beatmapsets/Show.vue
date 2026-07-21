@@ -6,6 +6,8 @@ import ActionButton from '../components/ActionButton.vue';
 import CommentForm from './CommentForm.vue';
 import BeatmapStatus from './BeatmapStatus.vue';
 
+import Tooltip from '../components/Tooltip.vue';
+
 import { useTimeAgo, useDateFormat } from '@vueuse/core';
 
 import { Link, usePage } from '@inertiajs/vue3';
@@ -52,6 +54,7 @@ async function feature() {
     }
 }
 
+const isOwnProfile = computed(() => (page.props.auth?.user?.id === page.props.beatmapset.author.id));
 import DescriptionEdit from './DescriptionEdit.vue';
 
 </script>
@@ -98,7 +101,7 @@ import DescriptionEdit from './DescriptionEdit.vue';
                 <div class="relative z-10 flex flex-row gap-4 p-4">
                     <img class="rounded-lg shadow w-52 h-52" :src="beatmapset.images.card"/>
 
-                    <div class="grid content-between text-shadow-lg grow">
+                    <div class="grid content-between grow" style="text-shadow: 0 1px 3px rgba(0,0,0,.75);">
                         <!-- title and artist -->
                         <div class="flex flex-col">
                             <p class="text-5xl font-semibold">{{ beatmapset.title }}</p>
@@ -173,13 +176,15 @@ import DescriptionEdit from './DescriptionEdit.vue';
                     <div class="grow"></div>
 
                     <form @submit.prevent="favorite">
-                    <ActionButton
-                        :label="isFavorited ? 'Un-favorite' : 'Favorite'"
-                        :icon="isFavorited ? 'fas fa-heart-broken' : 'fas fa-heart'"
-                        class="bg-pink-500 hover:bg-pink-400"
-                        type="submit"
-                        :disabled="favoriting"
-                    />
+                    <Tooltip text="You cannot favorite your own map!" position="top" :disabled="!isOwnProfile">
+                        <ActionButton
+                            :label="isFavorited ? 'Un-favorite' : 'Favorite'"
+                            :icon="isFavorited ? 'fas fa-heart-broken' : 'fas fa-heart'"
+                            class="bg-pink-500 hover:bg-pink-400"
+                            type="submit"
+                            :disabled="favoriting || isOwnProfile"
+                        />
+                    </Tooltip>
                     </form>
                 </div>
 
