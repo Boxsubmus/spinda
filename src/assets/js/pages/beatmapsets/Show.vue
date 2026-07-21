@@ -36,6 +36,7 @@ async function favorite() {
     try {
         const response = await axios.post(`/api/maps/${props.beatmapset.id}/favorite`);
         isFavorited.value = response.data.favorited;
+        props.beatmapset.favorites = response.data.favoriteCount;
     }
     finally {
         favoriting.value = false;

@@ -205,6 +205,8 @@ final class BeatmapsetsController extends AbstractController
         if ($existing) {
             $em->remove($existing);
             $favorited = false;
+            
+            $beatmapset->setFavorites($beatmapset->getFavorites() -  1);
         } else {
             $favorite = new FavoriteBeatmapset();
             $favorite->setUser($user);
@@ -212,12 +214,15 @@ final class BeatmapsetsController extends AbstractController
             $favorite->setCreatedAt(new \DateTimeImmutable());
             $em->persist($favorite);
             $favorited = true;
+
+            $beatmapset->setFavorites($beatmapset->getFavorites() + 1);
         }
 
         $em->flush();
 
         return $this->json([
             'favorited' => $favorited,
+            'favoriteCount' => $beatmapset->getFavorites()
         ]);
     }
 }

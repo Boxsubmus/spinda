@@ -38,15 +38,8 @@ final class UserController extends AbstractController
 
         return $inertia->render('users/Show', [
             'user' => UserSerializer::serializeVerbose($user),
-            'beatmaps' => $beatmapsData
+            'mybeatmaps' => $beatmapsData
         ]);
-        /*
-        return $this->render('user/index.html.twig', [
-            'storage' => $this->storage,
-            'user' => $user,
-            'beatmaps' => $beatmaps
-        ]);
-        */
     }
 
     #[Route('/users', name: 'app_user_index')]

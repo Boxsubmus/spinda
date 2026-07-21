@@ -19,7 +19,7 @@ defineOptions({
 
 const props = defineProps({
     user: Object,
-    beatmaps: Object
+    mybeatmaps: Object
 })
 
 const page = usePage();
@@ -179,18 +179,25 @@ async function saveAboutMe() {
             </div>
         </div>
 
-        <div v-if="false" class="bg-zinc-800 rounded-2xl overflow-hidden shadow p-6 basic-border">
+        <div class="bg-zinc-800 rounded-2xl overflow-hidden shadow p-6 basic-border">
             <h1 class="text-2xl">maps</h1>
 
-            <div class="p-0 rounded-2xl mt-6">
-                <div class="grid grid-cols-1 gap-3">
-                    <div v-for="beatmap in beatmaps">
-                        <BeatmapsetCard
-                            :beatmapset="beatmap"
-                            />
+            <div v-if="false">
+                <div class="p-0 rounded-2xl mt-6">
+                    <div class="grid grid-cols-1 gap-3">
+                        <div v-for="beatmap in mybeatmaps">
+                            <BeatmapsetCard
+                                :beatmapset="beatmap"
+                                />
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <div>
+                <h1 class="text-xl">favorite maps</h1>
+            </div>
+
         </div>
     </div>
 
