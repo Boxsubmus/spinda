@@ -41,10 +41,15 @@ defineProps({
           </Link>
         </div>
         <div class="grow"></div>
-        <div class="flex">
-          <span class="bg-gray-500 py-0 px-3 text-shadow-none rounded-3xl text-center text-zinc-800 font-bold inline-flex items-center justify-center">
+        <div class="flex gap-1">
+
+          <span v-if="beatmapset.featured" class="beatmapset-status-list bg-cyan-400">
+            <span class="pb-0.75"> FEATURED </span>
+          </span>
+          <span class="beatmapset-status-list bg-gray-500 ">
             <span class="pb-0.75"> UNRANKED </span>
           </span>
+          
         </div>
       </div>
     </div>

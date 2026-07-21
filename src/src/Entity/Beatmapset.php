@@ -74,6 +74,12 @@ class Beatmapset
     #[ORM\OneToMany(targetEntity: FavoriteBeatmapset::class, mappedBy: 'beatmapset', orphanRemoval: true)]
     private Collection $favoriteBeatmapsets;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isFeatured = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $featuredAt = null;
+
     public function __construct()
     {
         $this->beatmapsetComments = new ArrayCollection();
@@ -243,11 +249,6 @@ class Beatmapset
         return $this;
     }
 
-    public function isFeatured(): ?bool
-    {
-        return false;
-    }
-
     /**
      * @return Collection<int, BeatmapDifficulty>
      */
@@ -335,6 +336,30 @@ class Beatmapset
                 $favoriteBeatmapset->setBeatmapset(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIsFeatured(): bool
+    {
+        return $this->isFeatured ?? false;
+    }
+
+    public function setIsFeatured(?bool $isFeatured): static
+    {
+        $this->isFeatured = $isFeatured;
+
+        return $this;
+    }
+
+    public function getFeaturedAt(): ?\DateTimeImmutable
+    {
+        return $this->featuredAt;
+    }
+
+    public function setFeaturedAt(?\DateTimeImmutable $featuredAt): static
+    {
+        $this->featuredAt = $featuredAt;
 
         return $this;
     }

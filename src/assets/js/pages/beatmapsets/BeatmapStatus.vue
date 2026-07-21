@@ -6,11 +6,6 @@ const props = defineProps({
 
 let color = "bg-zinc-700/30";
 let label = "UNRANKED";
-if (props.beatmapset.featured)
-{
-    color = "bg-purple-400";
-    label = "FEATURED";
-}
 
 </script>
 

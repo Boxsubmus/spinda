@@ -236,4 +236,27 @@ final class BeatmapsetsController extends AbstractController
             'favoriteCount' => $beatmapset->getFavorites() + $delta
         ]);
     }
+
+    #[Route('/api/maps/{id}/feature', methods: ['POST'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function feature(
+        $id,
+        BeatmapsetRepository $repository,
+        EntityManagerInterface $em): Response
+    {
+        /** @var Beatmapset $beatmapset */
+        $beatmapset = $repository->find($id);
+        $user = $this->getUser();
+
+        $beatmapset->setIsFeatured(true);
+        $beatmapset->setFeaturedAt(new \DateTimeImmutable());
+        $em->persist($beatmapset);
+
+        $em->flush();
+
+        return $this->json([
+            'featured' => true,
+        ]);
+    }
 }

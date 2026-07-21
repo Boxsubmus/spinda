@@ -43,6 +43,15 @@ async function favorite() {
     }
 }
 
+async function feature() {
+    try {
+        const response = await axios.post(`/api/maps/${props.beatmapset.id}/feature`);
+        props.beatmapset.featured = response.data.featured;
+    }
+    finally {
+    }
+}
+
 import DescriptionEdit from './DescriptionEdit.vue';
 
 </script>
@@ -76,7 +85,11 @@ import DescriptionEdit from './DescriptionEdit.vue';
                     </div>
 
                     <!-- status -->
-                    <div class="flex mx-auto mr-0">
+                    <div class="flex mx-auto mr-0 gap-2">
+                        <span v-if="beatmapset.featured" class="py-2 px-10 text-shadow-sm rounded-3xl font-bold basic-border
+                            inline-flex items-center justify-center bg-cyan-500">
+                            FEATURED
+                        </span>
                         <BeatmapStatus :beatmapset="beatmapset" />
                     </div>
                 </div>
@@ -147,12 +160,16 @@ import DescriptionEdit from './DescriptionEdit.vue';
                         icon="fas fa-download"
                     />
 
+                    <form @submit.prevent="feature">
                     <div v-if="auth.user.roles.includes('ROLE_ADMIN')">
                         <ActionButton
-                            label="Award"
+                            label="Feature"
                             icon="fas fa-award"
+                            class="bg-green-600 hover:bg-green-400"
+                            type="submit"
                         />
                     </div>
+                    </form>
 
                     <div class="grow"></div>
 
@@ -160,7 +177,7 @@ import DescriptionEdit from './DescriptionEdit.vue';
                     <ActionButton
                         :label="isFavorited ? 'Un-favorite' : 'Favorite'"
                         :icon="isFavorited ? 'fas fa-heart-broken' : 'fas fa-heart'"
-                        class="bg-pink-500 hover:bg-pink-300"
+                        class="bg-pink-500 hover:bg-pink-400"
                         type="submit"
                         :disabled="favoriting"
                     />

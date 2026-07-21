@@ -33,7 +33,7 @@ class BeatmapsetSerializer
             ],
             'downloads' => $beatmapset->getDownloads(),
             'favorites' => $beatmapset->getFavorites(),
-            'featured' => $beatmapset->isFeatured(),
+            'featured' => $beatmapset->getIsFeatured(),
             'difficulties' => $difficultiesData,
 
             'images' => [
