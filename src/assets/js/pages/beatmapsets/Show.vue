@@ -160,7 +160,7 @@ import DescriptionEdit from './DescriptionEdit.vue';
                     <ActionButton
                         :label="isFavorited ? 'Un-favorite' : 'Favorite'"
                         :icon="isFavorited ? 'fas fa-heart-broken' : 'fas fa-heart'"
-                        :class="(isFavorited ? 'bg-pink-600' : 'bg-pink-300') + 'hover:bg-pink-300'"
+                        class="bg-pink-500 hover:bg-pink-300"
                         type="submit"
                         :disabled="favoriting"
                     />
@@ -180,7 +180,7 @@ import DescriptionEdit from './DescriptionEdit.vue';
                             :auth="page.props.auth"
                         />
                     </div>
-                    <div class="flex flex-col">
+                    <div class="flex flex-col" v-if="false">
                         <div class="pb-4">
                             <h3 class="text-lg font-semibold">
                                 Nominators

@@ -15,6 +15,7 @@ use App\Serializer\BeatmapsetSerializer;
 use App\Service\BeatmapsetStorageService;
 use App\Service\CommentVoteService;
 use App\Service\StorageService;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Nytodev\InertiaBundle\Service\Inertia;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,6 +27,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class BeatmapsetsController extends AbstractController
 {
@@ -189,6 +191,7 @@ final class BeatmapsetsController extends AbstractController
     }
 
     #[Route('/api/maps/{id}/favorite', methods: ['POST'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function toggleFavorite(
         $id,
         BeatmapsetRepository $repository,
@@ -198,31 +201,39 @@ final class BeatmapsetsController extends AbstractController
         $beatmapset = $repository->find($id);
         $user = $this->getUser();
 
-        $existing = $favoriteRepo->findOneBy(['user' => $user, 'beatmapset' => $beatmapset]);
+        if ($beatmapset->getAuthor() === $user) {
+            return $this->json(['error' => "You can't favorite your own beatmap!"], Response::HTTP_FORBIDDEN);
+        }
 
-        $favorited = false;
+        $existing = $favoriteRepo->findOneBy(['user' => $user, 'beatmapset' => $beatmapset]);
+        $delta = $existing ? -1 : 1;
 
         if ($existing) {
             $em->remove($existing);
-            $favorited = false;
-            
-            $beatmapset->setFavorites($beatmapset->getFavorites() -  1);
         } else {
             $favorite = new FavoriteBeatmapset();
             $favorite->setUser($user);
             $favorite->setBeatmapset($beatmapset);
             $favorite->setCreatedAt(new \DateTimeImmutable());
             $em->persist($favorite);
-            $favorited = true;
-
-            $beatmapset->setFavorites($beatmapset->getFavorites() + 1);
         }
 
-        $em->flush();
+        try {
+            $em->flush();
+
+        } catch (UniqueConstraintViolationException) {
+            // Lost a race to favorite the same map twice, treat as already-favorited
+            return $this->json([
+                'favorited' => true,
+                'favoriteCount' => $beatmapset->getFavorites(),
+            ]);
+        }
+
+        $favoriteRepo->incrementFavoriteCount($beatmapset, $delta);
 
         return $this->json([
-            'favorited' => $favorited,
-            'favoriteCount' => $beatmapset->getFavorites()
+            'favorited' => $delta === 1,
+            'favoriteCount' => $beatmapset->getFavorites() + $delta
         ]);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\BeatmapsetRepository;
+use App\Repository\FavoriteBeatmapsetRepository;
 use App\Repository\UserRepository;
 use App\Security\Voter\UserVoter;
 use App\Serializer\BeatmapsetSerializer;
@@ -25,20 +26,30 @@ final class UserController extends AbstractController
     ) {}
 
     #[Route('/users/{id}', name: 'app_user_show')]
-    public function show($id, UserRepository $repository, Inertia $inertia, BeatmapsetRepository $beatmapsRe): Response
+    public function show(
+        $id,
+        UserRepository $repository,
+        Inertia $inertia,
+        BeatmapsetRepository $beatmapsRepo,
+        FavoriteBeatmapsetRepository $favoriteRepo): Response
     {
         $user = $repository->find($id);
         
-        $beatmaps = $beatmapsRe->findBy([
-            'author' => $id
-        ]);
+        $beatmaps = $beatmapsRepo->findBy(['author' => $id]);
         $beatmapsData = array_map(function ($beatmap) use ($beatmaps) {
             return BeatmapsetSerializer::serializeVerbose($beatmap, $this->storage);
         }, $beatmaps);
 
+        $favorites = $favoriteRepo->findFavoritedBeatmapsets($user);
+        $favoritesData = array_map(
+            fn ($beatmap) => BeatmapsetSerializer::serializeVerbose($beatmap, $this->storage),
+            $favorites
+        );
+
         return $inertia->render('users/Show', [
             'user' => UserSerializer::serializeVerbose($user),
-            'mybeatmaps' => $beatmapsData
+            'myBeatmaps' => $beatmapsData,
+            'favoriteBeatmaps' => $favoritesData,
         ]);
     }
 
