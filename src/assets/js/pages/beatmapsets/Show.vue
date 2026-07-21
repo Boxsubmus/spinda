@@ -46,7 +46,7 @@ const props = defineProps({
                 <div class="absolute inset-0" style="background-color: hsla(0, 0%, 10%, 0.8);"></div>
 
                 <div class="z-10 flex p-4 pb-0">
-                    <div v-for="diff in beatmapset.difficulties" class="bg-black/40 p-3 rounded-xl">
+                    <div v-for="diff in beatmapset.difficulties" class="bg-black/30 p-3 rounded-xl basic-border">
                         <div class="flex">
                             <span class="rounded-full border-12 w-6 h-6" :style="{'border-color': '#' + diff.color}"></span>
                             <span class="pl-2">{{ diff.name }}</span>
@@ -142,10 +142,40 @@ const props = defineProps({
             </div>
 
             <div class="bg-zinc-800 px-6 py-4 basic-border-t">
-                <span class="text-lg font-semibold">
-                    Description
-                </span>
-                <Markdown :source="beatmapset.description" />
+                <div class="grid grid-cols-4">
+                    <div class="col-span-3">
+                        <span class="text-lg font-semibold">
+                            Description
+                        </span>
+                        <Markdown :source="beatmapset.description" />
+                    </div>
+                    <div class="flex flex-col">
+                        <div class="pb-4">
+                            <h3 class="text-lg font-semibold">
+                                Nominators
+                            </h3>
+                            <span>Starpelly</span>
+                        </div>
+    
+
+                        <div class="grid grid-cols-2">
+                            <div>
+                                <h3 class="text-lg font-semibold">
+                                    Genre
+                                </h3>
+                                <span>Novelty</span>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold">
+                                    Language
+                                </h3>
+                                <span>Instrumental</span>
+                            </div>
+                        </div>
+
+  
+                    </div>
+                </div>
             </div>
         </div>
 
