@@ -149,19 +149,4 @@ final class BeatmapsetsController extends AbstractController
 
         return $this->redirectToRoute('app_beatmapsets_show', ['id' => $beatmapset->getId()]);
     }
-
-    #[Route('/api/_io/index-beatmapset/{id}', methods: ['POST'])]
-    public function io_indexBeatmapset($id,
-        BeatmapsetRepository $repository,
-        Request $request,
-        EntityManagerInterface $em,
-        BeatmapsetStorageService $beatmapsetStorageService): Response
-    {
-        $beatmapset = $repository->find($id);
-        $result = $beatmapsetStorageService->regenerateCovers($beatmapset);
-
-        return $this->json([
-            'result' => $result,
-        ]);
-    }
 }

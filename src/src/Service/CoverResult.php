@@ -2,12 +2,16 @@
 
 namespace App\Service;
 
-class CoverResult
+final class CoverResult
 {
+    /** @param array<string, CoverVariant> $variants keyed by 'list', 'card', 'original' */
     public function __construct(
-        public readonly string $path,
-        public readonly string $url,
-        public readonly int $width,
-        public readonly int $height,
-    ) {}
+        public readonly array $variants,
+    ) {
+    }
+
+    public function get(string $name): CoverVariant
+    {
+        return $this->variants[$name] ?? throw new \RuntimeException("Unknown cover variant: {$name}");
+    }
 }

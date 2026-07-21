@@ -68,10 +68,17 @@ class Beatmapset
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $packageHash = null;
 
+    /**
+     * @var Collection<int, FavoriteBeatmapset>
+     */
+    #[ORM\OneToMany(targetEntity: FavoriteBeatmapset::class, mappedBy: 'beatmapset', orphanRemoval: true)]
+    private Collection $favoriteBeatmapsets;
+
     public function __construct()
     {
         $this->beatmapsetComments = new ArrayCollection();
         $this->beatmapDifficulties = new ArrayCollection();
+        $this->favoriteBeatmapsets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -271,18 +278,6 @@ class Beatmapset
         return $this;
     }
 
-    public function getCoverUrl(StorageService $storage): string
-    {
-        $path = sprintf('beatmaps/%d/covers/list.jpg', $this->id);
-        return $storage->getPublicUrl($path);
-    }
-
-    public function hasCover(StorageService $storage): bool
-    {
-        $path = sprintf('beatmaps/%d/covers/list.jpg', $this->id);
-        return $storage->$storage->fileExists($path);
-    }
-
     public function getPackageHash(): ?string
     {
         return $this->packageHash;
@@ -312,5 +307,35 @@ class Beatmapset
 
         $path = "beatmapset_files/" . $this->packageHash . ".zip";
         return $storage->getPublicUrl($path);
+    }
+
+    /**
+     * @return Collection<int, FavoriteBeatmapset>
+     */
+    public function getFavoriteBeatmapsets(): Collection
+    {
+        return $this->favoriteBeatmapsets;
+    }
+
+    public function addFavoriteBeatmapset(FavoriteBeatmapset $favoriteBeatmapset): static
+    {
+        if (!$this->favoriteBeatmapsets->contains($favoriteBeatmapset)) {
+            $this->favoriteBeatmapsets->add($favoriteBeatmapset);
+            $favoriteBeatmapset->setBeatmapset($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavoriteBeatmapset(FavoriteBeatmapset $favoriteBeatmapset): static
+    {
+        if ($this->favoriteBeatmapsets->removeElement($favoriteBeatmapset)) {
+            // set the owning side to null (unless already changed)
+            if ($favoriteBeatmapset->getBeatmapset() === $this) {
+                $favoriteBeatmapset->setBeatmapset(null);
+            }
+        }
+
+        return $this;
     }
 }

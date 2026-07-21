@@ -15,6 +15,12 @@ const props = defineProps({
 </script>
 
 <template>
+
+            <Paginate
+            :pagination="pagination"
+            base-url="/maps"    
+        />
+
     <div class="grid grid-cols-2 gap-4">
     <div v-for="beatmapset in beatmapsets">
         <BeatmapsetCard

@@ -67,12 +67,19 @@ class User implements UserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $lastSeenAt = null;
 
+    /**
+     * @var Collection<int, FavoriteBeatmapset>
+     */
+    #[ORM\OneToMany(targetEntity: FavoriteBeatmapset::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $favoriteBeatmapsets;
+
     public function __construct()
     {
         $this->beatmapsets = new ArrayCollection();
         $this->beatmapsetComments = new ArrayCollection();
         $this->userSessions = new ArrayCollection();
         $this->groups = new ArrayCollection();
+        $this->favoriteBeatmapsets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -347,5 +354,35 @@ class User implements UserInterface
         }
 
         return $this->lastSeenAt > new \DateTimeImmutable('-6 minutes');
+    }
+
+    /**
+     * @return Collection<int, FavoriteBeatmapset>
+     */
+    public function getFavoriteBeatmapsets(): Collection
+    {
+        return $this->favoriteBeatmapsets;
+    }
+
+    public function addFavoriteBeatmapset(FavoriteBeatmapset $favoriteBeatmapset): static
+    {
+        if (!$this->favoriteBeatmapsets->contains($favoriteBeatmapset)) {
+            $this->favoriteBeatmapsets->add($favoriteBeatmapset);
+            $favoriteBeatmapset->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavoriteBeatmapset(FavoriteBeatmapset $favoriteBeatmapset): static
+    {
+        if ($this->favoriteBeatmapsets->removeElement($favoriteBeatmapset)) {
+            // set the owning side to null (unless already changed)
+            if ($favoriteBeatmapset->getUser() === $this) {
+                $favoriteBeatmapset->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

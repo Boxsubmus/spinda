@@ -17,9 +17,11 @@ class BeatmapsetSerializer
             $difficultiesData[] = BeatmapsetSerializer::serializeDifficultyVerbose($diff);
         }
 
+        $listCoverUrl = $storage->getPublicUrl(sprintf('beatmaps/%d/covers/list.jpg', $beatmapset->getId()));
+        $cardCoverUrl = $storage->getPublicUrl(sprintf('beatmaps/%d/covers/card.jpg', $beatmapset->getId()));
+
         return [
             'id' => $beatmapset->getId(),
-            'coverUrl' => $beatmapset->getCoverUrl($storage),
             'title' => $beatmapset->getTitle(),
             'description' => $beatmapset->getDescription(),
             'artist' => $beatmapset->getArtist(),
@@ -32,7 +34,12 @@ class BeatmapsetSerializer
             'downloads' => $beatmapset->getDownloads(),
             'favorites' => $beatmapset->getFavorites(),
             'featured' => $beatmapset->isFeatured(),
-            'difficulties' => $difficultiesData
+            'difficulties' => $difficultiesData,
+
+            'images' => [
+                'list' => $listCoverUrl,
+                'card' => $cardCoverUrl
+            ]
         ];
     }
 
@@ -42,6 +49,7 @@ class BeatmapsetSerializer
             'countTaps' => $beatmapDifficulty->getCountTap(),
             'countHolds' => $beatmapDifficulty->getCountHold(),
             'bpm' => $beatmapDifficulty->getBpm(),
+            'drainTime' => $beatmapDifficulty->getTotalLength(),
             'name' => $beatmapDifficulty->getName(),
             'color' => $beatmapDifficulty->getColor()
         ];

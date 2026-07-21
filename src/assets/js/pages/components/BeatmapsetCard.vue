@@ -13,7 +13,7 @@ defineProps({
     <!-- Blurred background cover -->
     <div
       class="absolute inset-0 bg-cover bg-center blur-sm scale-110"
-      :style="{ backgroundImage: `url('${beatmapset.coverUrl}')` }"
+      :style="{ backgroundImage: `url('${beatmapset.images.list}')` }"
     ></div>
 
     <!-- Overlay for readability -->
@@ -27,7 +27,7 @@ defineProps({
 
     <!-- Content -->
     <div class="relative flex flex-row gap-4 p-2">
-      <img class="w-32 rounded-xl" :src="beatmapset.coverUrl" />
+      <img class="w-32 rounded-xl" :src="beatmapset.images.list" />
       <div class="flex flex-col text-shadow-sm">
         <span class="text-2xl font-semibold">{{ beatmapset.title }}</span>
         <span class="text-xl">{{ beatmapset.artist }}</span>

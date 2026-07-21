@@ -66,30 +66,38 @@ class StorageService
     public function storeCover(UploadedFile $file, int $beatmapId): CoverResult
     {
         // Validate image
-        if (!in_array($file->getMimeType(), ['image/jpeg', 'image/png', 'image/webp', 'image/gif'])) {
-            throw new \RuntimeException('Invalid image type. Allowed: JPEG, PNG, WEBP, GIF');
+        if (!in_array($file->getMimeType(), ['image/jpeg', 'image/png'])) {
+            throw new \RuntimeException('Invalid image type. Allowed: JPEG, PNG');
         }
 
-        if ($file->getSize() > 1 * 1024 * 1024 * 1024) {
-            throw new \RuntimeException('Image too large. Max: 1MB');
+        if ($file->getSize() > 1 * 1024 * 1024 * 10) {
+            throw new \RuntimeException('Image too large. Max: 10MB. Image size: ' . $file->getSize());
         }
 
-        // Generate path: /beatmaps/{id}/covers/list.jpg
-        $path = sprintf('beatmaps/%d/covers/list.jpg', $beatmapId);
+        $source = $this->loadImage($file->getRealPath());
 
-        // Convert and optimize image to JPG
-        $imageData = $this->convertToJpg($file->getRealPath());
+    $variants = [
+        'list' => 128,
+        'card' => 256,
+    ];
 
-        // Store with Flysystem
-        $this->storage->write($path, $imageData);
+    $results = [];
 
-        // Get image dimensions from the converted data
-        $tempPath = tempnam(sys_get_temp_dir(), 'img_');
-        file_put_contents($tempPath, $imageData);
-        list($width, $height) = getimagesize($tempPath);
-        unlink($tempPath);
+    // Cropped + resized variants
+    foreach ($variants as $name => $size) {
+        $square = $this->cropToSquare($source);
+        $resized = $this->resizeImage($square, $size, $size);
+        imagedestroy($square);
 
-        return new CoverResult(
+        $path = sprintf('beatmaps/%d/covers/%s.jpg', $beatmapId, $name);
+        $data = $this->encodeJpg($resized);
+        imagedestroy($resized);
+
+        $this->storage->write($path, $data);
+
+        [$width, $height] = [$size, $size]; // known exactly, no need to re-decode
+
+        $results[$name] = new CoverVariant(
             path: $path,
             url: $this->getPublicUrl($path),
             width: $width,
@@ -97,22 +105,135 @@ class StorageService
         );
     }
 
+    // Original, uncropped, converted to jpg but not resized
+    $originalPath = sprintf('beatmaps/%d/covers/original.jpg', $beatmapId);
+    $originalData = $this->encodeJpg($source);
+    $this->storage->write($originalPath, $originalData);
+
+    $results['original'] = new CoverVariant(
+        path: $originalPath,
+        url: $this->getPublicUrl($originalPath),
+        width: imagesx($source),
+        height: imagesy($source),
+    );
+
+    imagedestroy($source);
+
+    return new CoverResult($results);
+    }
+
+    /**
+ * Load an image resource from any supported source format
+ */
+private function loadImage(string $sourcePath): \GdImage
+{
+    $mimeType = mime_content_type($sourcePath);
+
+    $image = match ($mimeType) {
+        'image/jpeg' => imagecreatefromjpeg($sourcePath),
+        'image/webp' => imagecreatefromwebp($sourcePath),
+        'image/gif' => imagecreatefromgif($sourcePath),
+        'image/png' => $this->loadPngFlattened($sourcePath),
+        default => throw new \RuntimeException('Unsupported image type'),
+    };
+
+    if (!$image) {
+        throw new \RuntimeException('Failed to create image from source');
+    }
+
+    return $image;
+}
+
+/**
+ * PNGs may have transparency; flatten onto white since we're always outputting JPG
+ */
+private function loadPngFlattened(string $sourcePath): \GdImage|false
+{
+    $png = imagecreatefrompng($sourcePath);
+    if (!$png) {
+        return false;
+    }
+
+    $width = imagesx($png);
+    $height = imagesy($png);
+    $flattened = imagecreatetruecolor($width, $height);
+    $white = imagecolorallocate($flattened, 255, 255, 255);
+    imagefill($flattened, 0, 0, $white);
+    imagecopy($flattened, $png, 0, 0, 0, 0, $width, $height);
+    imagedestroy($png);
+
+    return $flattened;
+}
+
+/**
+ * Crop an image to a centered square, using the shorter dimension
+ */
+private function cropToSquare(\GdImage $source): \GdImage
+{
+    $width = imagesx($source);
+    $height = imagesy($source);
+    $side = min($width, $height);
+
+    $srcX = (int) (($width - $side) / 2);
+    $srcY = (int) (($height - $side) / 2);
+
+    $cropped = imagecreatetruecolor($side, $side);
+    imagecopy($cropped, $source, 0, 0, $srcX, $srcY, $side, $side);
+
+    return $cropped;
+}
+
+/**
+ * Resize an image to exact target dimensions
+ */
+private function resizeImage(\GdImage $source, int $targetWidth, int $targetHeight): \GdImage
+{
+    $resized = imagecreatetruecolor($targetWidth, $targetHeight);
+    imagecopyresampled(
+        $resized, $source,
+        0, 0, 0, 0,
+        $targetWidth, $targetHeight,
+        imagesx($source), imagesy($source)
+    );
+
+    return $resized;
+}
+
+/**
+ * Encode a GD image as JPG and return the raw bytes
+ */
+private function encodeJpg(\GdImage $image): string
+{
+    ob_start();
+    imagejpeg($image, null, 80);
+    $data = ob_get_clean();
+
+    if ($data === false) {
+        throw new \RuntimeException('Failed to convert image to JPG');
+    }
+
+    return $data;
+}
+
     /**
      * Delete cover art
      */
     public function deleteCover(int $beatmapId): void
     {
-        $path = sprintf('beatmaps/%d/covers/list.jpg', $beatmapId);
-        if ($this->storage->fileExists($path)) {
-            $this->storage->delete($path);
-            
-            // Check if directory is empty and delete it if it is
-            $dirPath = sprintf('beatmaps/%d/covers', $beatmapId);
-            if ($this->storage->directoryExists($dirPath)) {
-                $contents = $this->storage->listContents($dirPath)->toArray();
-                if (empty($contents)) {
-                    $this->storage->deleteDirectory($dirPath);
-                }
+        $names = ['list.jpg', 'card.jpg', 'original.jpg'];
+        $dirPath = sprintf('beatmaps/%d/covers', $beatmapId);
+
+        foreach ($names as $name) {
+            $path = $dirPath . '/' . $name;
+            if ($this->storage->fileExists($path)) {
+                $this->storage->delete($path);
+            }
+        }
+
+        if ($this->storage->directoryExists($dirPath)) {
+            $contents = $this->storage->listContents($dirPath)->toArray();
+            if (empty($contents)) {
+                $this->storage->deleteDirectory($dirPath);
             }
         }
     }

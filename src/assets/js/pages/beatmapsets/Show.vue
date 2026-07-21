@@ -6,7 +6,7 @@ import ActionButton from '../components/ActionButton.vue';
 import CommentForm from './CommentForm.vue';
 import BeatmapStatus from './BeatmapStatus.vue';
 
-import { useTimeAgo } from '@vueuse/core';
+import { useTimeAgo, useDateFormat } from '@vueuse/core';
 
 import { Link, usePage } from '@inertiajs/vue3';
 import { routes } from '../../routes.js';
@@ -37,26 +37,36 @@ const props = defineProps({
                     >
                 </div>
 
+                    <div
+      class="absolute inset-0 bg-cover bg-center blur-sm scale-105"
+      :style="{ backgroundImage: `url('${beatmapset.images.card}')` }"
+    ></div>
+
                 <!-- dark overlay so text stays readable -->
-                <div class="absolute inset-0" style="background-color: hsla(0, 0%, 0%, 0.2);"></div>
+                <div class="absolute inset-0" style="background-color: hsla(0, 0%, 10%, 0.8);"></div>
 
                 <div class="z-10 flex p-4 pb-0">
                     <div v-for="diff in beatmapset.difficulties" class="bg-black/40 p-3 rounded-xl">
                         <div class="flex">
-                            <span class="rounded-full border-4 w-7 h-7" :style="{'border-color': '#' + diff.color}"></span>
+                            <span class="rounded-full border-12 w-6 h-6" :style="{'border-color': '#' + diff.color}"></span>
                             <span class="pl-2">{{ diff.name }}</span>
                         </div>
+                    </div>
+
+                    <!-- status -->
+                    <div class="flex mx-auto mr-0">
+                            <BeatmapStatus :beatmapset="beatmapset" />
                     </div>
                 </div>
                 
                 <!-- Content -->
                 <div class="relative z-10 flex flex-row gap-4 p-4">
-                    <img class="rounded-lg shadow w-52 h-52" :src="beatmapset.coverUrl"/>
+                    <img class="rounded-lg shadow w-52 h-52" :src="beatmapset.images.card"/>
 
                     <div class="grid content-between text-shadow-lg grow">
                         <!-- title and artist -->
                         <div class="flex flex-col">
-                            <p class="text-5xl">{{ beatmapset.title }}</p>
+                            <p class="text-5xl font-semibold">{{ beatmapset.title }}</p>
                             <p class="text-3xl">{{ beatmapset.artist }}</p>
                         </div>
 
@@ -74,12 +84,7 @@ const props = defineProps({
                     </div>
 
                     <!-- box thing -->
-                    <div class="flex flex-col relative gap-4">
-
-                        <!-- status -->
-                        <div class="flex mx-auto mr-0">
-                            <BeatmapStatus :beatmapset="beatmapset" />
-                        </div>
+                    <div class="flex flex-col relative gap-1 w-65">
 
                         <!-- box -->
                         <div class="grid grid-cols-2 gap-1">
@@ -94,6 +99,22 @@ const props = defineProps({
                                 {{ beatmapset.favorites }}
                             </span>
                         </div>
+
+                        <span class="bg-zinc-800 px-4 p-2 rounded basic-border">
+                            <div>
+                                Taps {{ beatmapset.difficulties[0].countTaps }}
+                            </div>
+                            <div>
+                                Holds {{ beatmapset.difficulties[0].countHolds }}
+                            </div>
+                            <div>
+                                BPM {{ beatmapset.difficulties[0].bpm }}
+                            </div>
+                            <div>
+                                Time {{ useDateFormat(beatmapset.difficulties[0].drainTime, 'mm:ss') }}
+                            </div>
+                        </span>
+
                     </div>
                 </div>
 

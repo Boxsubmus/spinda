@@ -35,6 +35,7 @@ class BeatmapsetStorageService
         try {
             $this->storage->storeCover($cover, $beatmapset->getId());
         } catch (\RuntimeException $e) {
+            var_dump($e);
             return CoverRegenerationResult::StorageFailed;
         } finally {
             @unlink($cover->getPathname());
