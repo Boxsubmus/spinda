@@ -5,9 +5,11 @@ namespace App\Controller;
 use App\Entity\Beatmapset;
 use App\Entity\BeatmapsetComment;
 use App\Entity\BeatmapsetCommentVote;
+use App\Entity\FavoriteBeatmapset;
 use App\Repository\BeatmapsetCommentRepository;
 use App\Repository\BeatmapsetCommentVoteRepository;
 use App\Repository\BeatmapsetRepository;
+use App\Repository\FavoriteBeatmapsetRepository;
 use App\Security\Voter\BeatmapsetVoter;
 use App\Serializer\BeatmapsetSerializer;
 use App\Service\BeatmapsetStorageService;
@@ -32,15 +34,20 @@ final class BeatmapsetsController extends AbstractController
     ) {}
 
     #[Route('/maps/{id}', name: 'app_beatmapsets_show')]
-    public function show($id, Inertia $inertia, BeatmapsetRepository $repository, BeatmapsetCommentRepository $commentRepository, BeatmapsetCommentVoteRepository $votesRepo): Response
+    public function show($id,
+        Inertia $inertia,
+        BeatmapsetRepository $repository,
+        BeatmapsetCommentRepository $commentRepository,
+        BeatmapsetCommentVoteRepository $votesRepo,
+        FavoriteBeatmapsetRepository $favoriteRepo): Response
     {
         $beatmapset = $repository->find($id);
+        $user = $this->getUser();
+        
         $comments = $commentRepository->findByBeatmapset($beatmapset);
-        $votes = $votesRepo->findUserVotesForComments($this->getUser(), $comments);
+        $votes = $votesRepo->findUserVotesForComments($user, $comments);
 
         $commentsData = array_map(function ($comment) use ($votes) {
-            $userVote = $votes[$comment->getId()] ?? null; // adjust based on what findUserVotesForComments returns
-
             return [
                 'id' => $comment->getId(),
                 'content' => $comment->getContent(),
@@ -50,15 +57,18 @@ final class BeatmapsetsController extends AbstractController
                     'username' => $comment->getAuthor()->getUsername(),
                     'avatarURL' => $comment->getAuthor()->getAvatarURL(),
                 ],
-                'userVote' => $userVote, // e.g. 'up', 'down', or null
+                'userVote' => $votes[$comment->getId()] ?? null,
                 'likes' => $comment->getLikes(),
                 'dislikes' => $comment->getDislikes()
             ];
         }, $comments);
 
+        $isFavorited = $favoriteRepo->isFavorited($user, $beatmapset);
+
         return $inertia->render('beatmapsets/Show', [
             'beatmapset' => BeatmapsetSerializer::serializeVerbose($beatmapset, $this->storage),
-            'comments' => $commentsData
+            'comments' => $commentsData,
+            'isFavorited' => $user ? $isFavorited : false,
         ]);
     }
 
@@ -175,6 +185,39 @@ final class BeatmapsetsController extends AbstractController
 
         return $this->json([
             'description' => $beatmapsetEditing->getDescription(),
+        ]);
+    }
+
+    #[Route('/api/maps/{id}/favorite', methods: ['POST'])]
+    public function toggleFavorite(
+        $id,
+        BeatmapsetRepository $repository,
+        FavoriteBeatmapsetRepository $favoriteRepo,
+        EntityManagerInterface $em): Response
+    {
+        $beatmapset = $repository->find($id);
+        $user = $this->getUser();
+
+        $existing = $favoriteRepo->findOneBy(['user' => $user, 'beatmapset' => $beatmapset]);
+
+        $favorited = false;
+
+        if ($existing) {
+            $em->remove($existing);
+            $favorited = false;
+        } else {
+            $favorite = new FavoriteBeatmapset();
+            $favorite->setUser($user);
+            $favorite->setBeatmapset($beatmapset);
+            $favorite->setCreatedAt(new \DateTimeImmutable());
+            $em->persist($favorite);
+            $favorited = true;
+        }
+
+        $em->flush();
+
+        return $this->json([
+            'favorited' => $favorited,
         ]);
     }
 }

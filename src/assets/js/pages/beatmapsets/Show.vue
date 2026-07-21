@@ -20,9 +20,27 @@ defineOptions({
 })
 const props = defineProps({
     beatmapset: Object,
-    comments: Object
+    comments: Object,
+    isFavorited: Boolean
 })
 
+const isFavorited = ref(props.isFavorited);
+console.log(props);
+import axios from 'axios';
+
+const favoriting = ref(false);
+
+async function favorite() {
+    favoriting.value = true;
+    
+    try {
+        const response = await axios.post(`/api/maps/${props.beatmapset.id}/favorite`);
+        isFavorited.value = response.data.favorited;
+    }
+    finally {
+        favoriting.value = false;
+    }
+}
 
 import DescriptionEdit from './DescriptionEdit.vue';
 
@@ -137,11 +155,15 @@ import DescriptionEdit from './DescriptionEdit.vue';
 
                     <div class="grow"></div>
 
+                    <form @submit.prevent="favorite">
                     <ActionButton
-                        label="Favorite"
-                        icon="fas fa-heart"
-                        class="bg-pink-400 hover:bg-pink-300"
+                        :label="isFavorited ? 'Un-favorite' : 'Favorite'"
+                        :icon="isFavorited ? 'fas fa-heart-broken' : 'fas fa-heart'"
+                        :class="(isFavorited ? 'bg-pink-600' : 'bg-pink-300') + 'hover:bg-pink-300'"
+                        type="submit"
+                        :disabled="favoriting"
                     />
+                    </form>
                 </div>
 
             </div>

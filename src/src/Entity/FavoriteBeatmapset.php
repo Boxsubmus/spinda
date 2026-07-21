@@ -6,6 +6,7 @@ use App\Repository\FavoriteBeatmapsetRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FavoriteBeatmapsetRepository::class)]
+#[ORM\UniqueConstraint(name: 'uniq_user_beatmapset', columns: ['user_id', 'beatmapset_id'])]
 class FavoriteBeatmapset
 {
     #[ORM\Id]
@@ -14,7 +15,7 @@ class FavoriteBeatmapset
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'favoriteBeatmapsets')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Beatmapset $beatmapset = null;
 
     #[ORM\ManyToOne(inversedBy: 'favoriteBeatmapsets')]
