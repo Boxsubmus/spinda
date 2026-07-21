@@ -72,7 +72,7 @@ final class UserController extends AbstractController
     }
 
     #[Route('/api/users/{id}/about', name: 'app_user_aboutme_edit', methods: ['POST'])]
-    public function aboutMeEdit(User $userEditing, Request $request, UserRepository $userRepository, CsrfTokenManagerInterface $csrfTokenManager, \Doctrine\ORM\EntityManagerInterface $em): Response
+    public function aboutMeEdit(User $userEditing, Request $request, CsrfTokenManagerInterface $csrfTokenManager, \Doctrine\ORM\EntityManagerInterface $em): JsonResponse
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $this->denyAccessUnlessGranted(UserVoter::EDIT, $userEditing);

@@ -9,6 +9,7 @@ const props = defineProps({
         type: String,
         default: '',
     },
+    placeholder: String,
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -52,7 +53,7 @@ const renderedHtml = computed(() => {
             rows="10"
             maxlength="2048"
             class="w-full bg-zinc-900 text-white p-3 focus:outline-none resize-y"
-            placeholder="Write something about yourself... (Markdown supported)"
+            :placeholder="props.placeholder"
             style="font-family: Inter;"
         ></textarea>
 

@@ -43,7 +43,7 @@ defineProps({
         <div class="grow"></div>
         <div class="flex">
           <span class="bg-gray-400 py-0 px-3 text-shadow-none rounded-3xl text-center text-zinc-800 font-bold inline-flex items-center justify-center">
-            <span class="pb-0.75"> ARCHIVE </span>
+            <span class="pb-0.75"> UNRANKED </span>
           </span>
         </div>
       </div>

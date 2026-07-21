@@ -146,7 +146,7 @@ async function saveAboutMe() {
             </div>
 
             <div v-if="isEditing">
-                <MarkdownEditor v-model="aboutMeDraft" />
+                <MarkdownEditor v-model="aboutMeDraft" placeholder="Write something about yourself... (Markdown supported)" />
                 <div class="flex gap-2 mt-3">
                     
                     <form @submit.prevent="saveAboutMe">

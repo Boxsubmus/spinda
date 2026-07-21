@@ -4,8 +4,8 @@ const props = defineProps({
   class: { type:String }
 })
 
-let color = "bg-zinc-700";
-let label = "ARCHIVE";
+let color = "bg-zinc-700/30";
+let label = "UNRANKED";
 if (props.beatmapset.featured)
 {
     color = "bg-purple-400";

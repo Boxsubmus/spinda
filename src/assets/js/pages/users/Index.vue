@@ -6,7 +6,6 @@ import CountryFlag from '../components/CountryFlag.vue';
 import { routes } from '../../routes.js';
 import DateTimeSpan from '../components/DateTimeSpan.vue';
 
-
 defineOptions({
     layout: [AppLayout, { title: 'users' }]
 });
@@ -39,7 +38,7 @@ const props = defineProps({
                     </div>
                     <div class="flex flex-row gap-4">
                         <div class="flex flex-col text-lg w-90 text-right justify-center">
-                            <span v-if="!user.isOnline">Last seen <DateTimeSpan :dateTime="user.lastSeenAt" /></span>
+                            <span v-if="!user.isOnline">Last seen <DateTimeSpan :dateTime="user.lastSeenAt ?? user.createdAt" /></span>
                             <span v-if="user.isOnline">Online!</span>
                             <span v-else>Offline</span>
                         </div>

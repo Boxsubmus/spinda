@@ -23,6 +23,9 @@ const props = defineProps({
     comments: Object
 })
 
+
+import DescriptionEdit from './DescriptionEdit.vue';
+
 </script>
 
 <template>
@@ -38,14 +41,14 @@ const props = defineProps({
                 </div>
 
                     <div
-      class="absolute inset-0 bg-cover bg-center blur-sm scale-105"
-      :style="{ backgroundImage: `url('${beatmapset.images.card}')` }"
-    ></div>
+                        class="absolute inset-0 bg-cover bg-center blur-sm scale-105"
+                        :style="{ backgroundImage: `url('${beatmapset.images.card}')` }"
+                    ></div>
 
                 <!-- dark overlay so text stays readable -->
                 <div class="absolute inset-0" style="background-color: hsla(0, 0%, 10%, 0.8);"></div>
 
-                <div class="z-10 flex p-4 pb-0">
+                <div class="z-10 flex flex-row p-4 gap-2 basic-border-b" style="background-color: hsla(0, 0%, 0%, 0.3);">
                     <div v-for="diff in beatmapset.difficulties" class="bg-black/30 p-3 rounded-xl basic-border">
                         <div class="flex">
                             <span class="rounded-full border-12 w-6 h-6" :style="{'border-color': '#' + diff.color}"></span>
@@ -55,7 +58,7 @@ const props = defineProps({
 
                     <!-- status -->
                     <div class="flex mx-auto mr-0">
-                            <BeatmapStatus :beatmapset="beatmapset" />
+                        <BeatmapStatus :beatmapset="beatmapset" />
                     </div>
                 </div>
                 
@@ -135,7 +138,9 @@ const props = defineProps({
                     <div class="grow"></div>
 
                     <ActionButton
+                        label="Favorite"
                         icon="fas fa-heart"
+                        class="bg-pink-400 hover:bg-pink-300"
                     />
                 </div>
 
@@ -147,7 +152,10 @@ const props = defineProps({
                         <span class="text-lg font-semibold">
                             Description
                         </span>
-                        <Markdown :source="beatmapset.description" />
+                        <DescriptionEdit
+                            :beatmapset="beatmapset"
+                            :auth="page.props.auth"
+                        />
                     </div>
                     <div class="flex flex-col">
                         <div class="pb-4">

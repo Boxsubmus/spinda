@@ -8,6 +8,7 @@ use App\Entity\BeatmapsetCommentVote;
 use App\Repository\BeatmapsetCommentRepository;
 use App\Repository\BeatmapsetCommentVoteRepository;
 use App\Repository\BeatmapsetRepository;
+use App\Security\Voter\BeatmapsetVoter;
 use App\Serializer\BeatmapsetSerializer;
 use App\Service\BeatmapsetStorageService;
 use App\Service\CommentVoteService;
@@ -15,6 +16,7 @@ use App\Service\StorageService;
 use Doctrine\ORM\EntityManagerInterface;
 use Nytodev\InertiaBundle\Service\Inertia;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -148,5 +150,31 @@ final class BeatmapsetsController extends AbstractController
         $em->flush();
 
         return $this->redirectToRoute('app_beatmapsets_show', ['id' => $beatmapset->getId()]);
+    }
+
+    #[Route('/api/maps/{id}/description', methods: ['POST'])]
+    public function descriptionEdit(Beatmapset $beatmapsetEditing, Request $request, CsrfTokenManagerInterface $csrfTokenManager, EntityManagerInterface $em): JsonResponse
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted(BeatmapsetVoter::EDIT, $beatmapsetEditing);
+
+        $token = $request->headers->get('X-CSRF-TOKEN');
+        if (!$csrfTokenManager->isTokenValid(new CsrfToken('inertia', $token))) {
+            return new JsonResponse(['error' => 'Invalid CSRF token'], 403);
+        }
+
+        $content = trim($request->toArray()['content'] ?? '');
+
+        if (mb_strlen($content) > 2048) {
+            return new JsonResponse(['error' => 'Content is too long!'], 413);
+        }
+
+        $beatmapsetEditing->setDescription($content);
+        $em->persist($beatmapsetEditing);
+        $em->flush();
+
+        return $this->json([
+            'description' => $beatmapsetEditing->getDescription(),
+        ]);
     }
 }
