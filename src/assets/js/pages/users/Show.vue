@@ -100,15 +100,15 @@ async function saveAboutMe() {
 
             <div class="flex gap-2 items-stretch h-full p-3">
                 <div class="rounded-xl basic-border flex flex-col justify-center items-center min-w-28 bg-zinc-700/40">
-                    <span class="text-white/80">Score</span>
+                    <span class="text-white/80">score</span>
                     <span class="font-semibold text-3xl">-</span>
                 </div>
                 <div class="rounded-xl basic-border flex flex-col justify-center items-center min-w-28 bg-zinc-700/40">
-                    <span class="text-white/80">Mapping</span>
+                    <span class="text-white/80">mapping</span>
                     <span class="font-semibold text-3xl">{{ user.rank_mapping != null ? '#' + (user.rank_mapping) : '-' }}</span>
                 </div>
                 <div class="rounded-xl basic-border flex flex-col justify-center items-center min-w-28 bg-zinc-700/40">
-                    <span class="text-white/80">Kudos</span>
+                    <span class="text-white/80">kudos</span>
                     <span class="font-semibold text-3xl">{{ user.rank_kudos != null ? '#' + (user.rank_kudos) : '-' }}</span>
                 </div>
             </div>

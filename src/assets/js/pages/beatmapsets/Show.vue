@@ -176,7 +176,7 @@ import DescriptionEdit from './DescriptionEdit.vue';
                     <div class="grow"></div>
 
                     <form @submit.prevent="favorite">
-                    <Tooltip text="You cannot favorite your own map!" position="top" :disabled="!isOwnProfile">
+                    <Tooltip text="You cannot give kudos to your own map!" position="top" :disabled="!isOwnProfile">
                         <ActionButton
                             :label="isFavorited ? 'Un-kudos' : 'Kudos'"
                             :icon="isFavorited ? 'fas fa-heart-broken' : 'fas fa-heart'"

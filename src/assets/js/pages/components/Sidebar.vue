@@ -41,6 +41,10 @@ const data = {
                     {
                         title: "mapping",
                         url: "/rankings/mapping"
+                    },
+                    {
+                        title: "kudos",
+                        url: "/rankings/kudos"
                     }
                 ]
             },
