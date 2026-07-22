@@ -77,22 +77,40 @@ async function saveAboutMe() {
 
         <img class="rounded-2xl w-40 h-40 shadow-lg self-end mb-4 ml-4" :src="user.avatarUrl"/>
 
-        <div class="my-auto text-shadow-xs flex flex-col gap-1">
-            <div class="flex flex-row gap-3 items-center">
-                <span class="text-3xl leading-none align-baseline relative top-[-3px]">{{ user.username }}</span>
+            <div class="x justify-between w-full items-center">
 
-                <div class="flex flex-row gap-1">
-                <div v-for="group in user.groups" >
-                    <div class="rounded-full bg-zinc-900 p-0.5 px-4" :style="'color: #' + group.color + ';' ">
-                        {{ group.displayName }}
+            <div class="my-auto text-shadow-xs flex flex-col gap-1">
+                <div class="flex flex-row gap-3 items-center">
+                    <span class="text-3xl leading-none align-baseline relative top-[-3px]">{{ user.username }}</span>
+
+                    <div class="flex flex-row gap-1">
+                    <div v-for="group in user.groups" >
+                        <div class="rounded-full bg-zinc-900 p-0.5 px-4" :style="'color: #' + group.color + ';' ">
+                            {{ group.displayName }}
+                        </div>
                     </div>
-                </div>
-                </div>
+                    </div>
 
+                </div>
+                <div class="flex flex-row gap-2">
+                    <CountryFlag :flag-url="user.countryFlagUrl" class="top-[5px]"/>
+                    <span class="text-lg">{{ user.countryName }}</span>
+                </div>
             </div>
-            <div class="flex flex-row gap-2">
-                <CountryFlag :flag-url="user.countryFlagUrl" class="top-[5px]"/>
-                <span class="text-lg">{{ user.countryName }}</span>
+
+            <div class="flex gap-2 items-stretch h-full p-3">
+                <div class="rounded-xl basic-border flex flex-col justify-center items-center min-w-28 bg-zinc-700/40">
+                    <span class="text-white/80">Score</span>
+                    <span class="font-semibold text-3xl">-</span>
+                </div>
+                <div class="rounded-xl basic-border flex flex-col justify-center items-center min-w-28 bg-zinc-700/40">
+                    <span class="text-white/80">Mapping</span>
+                    <span class="font-semibold text-3xl">{{ user.rank_mapping != null ? '#' + (user.rank_mapping) : '-' }}</span>
+                </div>
+                <div class="rounded-xl basic-border flex flex-col justify-center items-center min-w-28 bg-zinc-700/40">
+                    <span class="text-white/80">Kudos</span>
+                    <span class="font-semibold text-3xl">{{ user.rank_kudos != null ? '#' + (user.rank_kudos) : '-' }}</span>
+                </div>
             </div>
         </div>
 

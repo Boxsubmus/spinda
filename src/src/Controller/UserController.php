@@ -46,8 +46,11 @@ final class UserController extends AbstractController
             $favorites
         );
 
+        $rankMP = $repository->getMappingRank($user);
+        $rankKudos = $repository->getKudosRank($user);
+
         return $inertia->render('users/Show', [
-            'user' => UserSerializer::serializeVerbose($user),
+            'user' => UserSerializer::serializeVerbose($user, $rankMP, $rankKudos),
             'myBeatmaps' => $beatmapsData,
             'favoriteBeatmaps' => $favoritesData,
         ]);

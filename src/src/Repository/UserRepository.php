@@ -68,29 +68,23 @@ class UserRepository extends ServiceEntityRepository
         );
     }
 
+    public function getMappingRank(User $user): int
+    {
+        $count = $this->getEntityManager()->getConnection()->fetchOne(
+            'SELECT COUNT(*) FROM user WHERE mapping_points > :mp',
+            ['mp' => $user->getMappingPoints()]
+        );
 
-    //    /**
-    //     * @return User[] Returns an array of User objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('u.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+        return (int) $count + 1;
+    }
 
-    //    public function findOneBySomeField($value): ?User
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function getKudosRank(User $user): int
+    {
+        $count = $this->getEntityManager()->getConnection()->fetchOne(
+            'SELECT COUNT(*) FROM user WHERE kudos > :kudos',
+            ['kudos' => $user->getKudos()]
+        );
+
+        return (int) $count + 1;
+    }
 }

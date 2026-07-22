@@ -6,7 +6,7 @@ use App\Entity\User;
 
 class UserSerializer
 {
-    public static function serializeVerbose(User $user): array
+    public static function serializeVerbose(User $user, ?int $rankMapping, ?int $rankKudos): array
     {
         $groupsData = [];
         foreach ($user->getGroups() as $group) {
@@ -32,7 +32,10 @@ class UserSerializer
 
             'isAdmin' => $user->isAdmin(),
             'isOnline' => $user->isOnline(),
-            'lastSeenAt' => $user->getLastSeenAt()
+            'lastSeenAt' => $user->getLastSeenAt(),
+
+            'rank_mapping' => $rankMapping,
+            'rank_kudos' => $rankKudos
         ];
     }
     
