@@ -23,6 +23,7 @@ const triggerRef = ref(null);
 const tooltipRef = ref(null);
 const arrowRef = ref(null);
 const visible = ref(false);
+const actuallyVisible = ref(false);
 
 const floatingStyles = reactive({ top: '0px', left: '0px' });
 const arrowStyles = reactive({});
@@ -80,9 +81,11 @@ watch(visible, async (isVisible) => {
 	if (isVisible) {
 		await import('vue').then(({ nextTick }) => nextTick());
 		cleanupAutoUpdate = autoUpdate(triggerRef.value, tooltipRef.value, updatePosition);
+		actuallyVisible.value = true;
 	} else if (cleanupAutoUpdate) {
 		cleanupAutoUpdate();
 		cleanupAutoUpdate = null;
+		actuallyVisible.value = false;
 	}
 });
 
@@ -106,11 +109,11 @@ onBeforeUnmount(() => {
 
 	<Teleport to="body">
 		<div
-			v-if="visible"
+			v-if="actuallyVisible"
 			ref="tooltipRef"
 			role="tooltip"
-			class="pointer-events-none absolute z-50 whitespace-nowrap rounded-md bg-zinc-900 px-2 py-1 text text-white shadow-lg transition-opacity duration-150"
-			:class="visible ? 'opacity-100' : 'opacity-0'"
+			class="pointer-events-none absolute z-50 whitespace-nowrap rounded-md bg-zinc-900 px-2 py-1 text text-white transition-opacity duration-150 shadow-[0_0px_12px_rgba(0,0,0,0.35)]"
+			:class="actuallyVisible ? 'opacity-100' : 'opacity-0'"
 			:style="floatingStyles"
 		>
 			{{ text }}

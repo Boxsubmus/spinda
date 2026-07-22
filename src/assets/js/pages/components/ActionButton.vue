@@ -19,7 +19,7 @@ const builtinclasses = `
   text-shadow-sm
   items-center
   border border-white/30
-  disabled:opacity-50 disabled:cursor-not-allowed
+  disabled:opacity-50 disabled:cursor-auto
 `
 
 let finalClasses = builtinclasses;

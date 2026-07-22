@@ -7,6 +7,7 @@ import CommentForm from './CommentForm.vue';
 import BeatmapStatus from './BeatmapStatus.vue';
 
 import Tooltip from '../components/Tooltip.vue';
+import DateTimeSpan from '../components/DateTimeSpan.vue';
 
 import { useTimeAgo, useDateFormat } from '@vueuse/core';
 
@@ -116,7 +117,7 @@ import DescriptionEdit from './DescriptionEdit.vue';
                                     mapped by
                                     <Link :href="routes.userShow(beatmapset.author.id)" class="font-semibold hover:underline" href="">{{ beatmapset.author.username }}</Link>
                                 </div>
-                                <p>submitted {{ useTimeAgo(beatmapset.createdAt.date + beatmapset.createdAt.timezone) }}</p>
+                                <span>submitted <DateTimeSpan :date-time="beatmapset.createdAt"/></span>
                             </div>
                         </div>
                     </div>
