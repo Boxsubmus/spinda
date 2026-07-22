@@ -77,6 +77,14 @@ const data = {
         ]
     };
 
+const props = defineProps({
+    activeUrl: { type: String },
+});
+
+function isActive(url) {
+    return page.url === url;
+}
+
 </script>
 
 <template>
@@ -95,12 +103,16 @@ const data = {
 
             <div class="flex grow flex-col gap-8">
                 <div v-for="group in data.navMain">
-                    <div class="flex flex-col gap-0">
+                    <div class="flex flex-col gap-1">
                         <div class="p-3 py-1">
                             <span class="text-gray-400">{{ group.title }}</span>
                         </div>
                         <div v-for="item in group.items" class="flex flex-col gap-0">
-                            <Link :href="item.url" class="p-3 py-2 hover:bg-zinc-800 rounded-lg">
+                            <Link
+                                :href="item.url"
+                                class="p-3 py-2 hover:bg-zinc-800 rounded-lg"
+                                :class="isActive(item.url) ? 'bg-zinc-800' : ''"
+                                >
                                 {{ item.title }}
                             </Link>
                         </div>

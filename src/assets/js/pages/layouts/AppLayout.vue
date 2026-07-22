@@ -2,7 +2,8 @@
 import Sidebar from '../components/Sidebar.vue';
 
 defineProps({
-    title: String
+    title: String,
+    activeSidebarUrl: String,
 })
 </script>
 
