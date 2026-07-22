@@ -45,7 +45,7 @@ class FavoriteBeatmapsetRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function incrementFavoriteCount(Beatmapset $beatmapset, int $delta): void
+    public function incrementFavoriteCount(Beatmapset $beatmapset, int $delta): int
     {
         $this->getEntityManager()->createQuery(
             'UPDATE App\Entity\Beatmapset b SET b.favorites = b.favorites + :delta WHERE b.id = :id'
@@ -53,5 +53,10 @@ class FavoriteBeatmapsetRepository extends ServiceEntityRepository
         ->setParameter('delta', $delta)
         ->setParameter('id', $beatmapset->getId())
         ->execute();
+
+        return (int) $this->getEntityManager()->getConnection()->fetchOne(
+            'SELECT favorites FROM beatmapset WHERE id = :id',
+            ['id' => $beatmapset->getId()]
+        );
     }
 }

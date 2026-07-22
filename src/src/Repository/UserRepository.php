@@ -55,14 +55,17 @@ class UserRepository extends ServiceEntityRepository
         ->execute();
     }
 
-    public function incrementKudosCount(User $user, int $delta): void
+    public function incrementKudosCount(User $user, int $delta): int
     {
-        $this->getEntityManager()->createQuery(
-            'UPDATE App\Entity\User u SET u.kudos = u.kudos + :delta WHERE u.id = :id'
-        )
-        ->setParameter('delta', $delta)
-        ->setParameter('id', $user->getId())
-        ->execute();
+        $this->getEntityManager()->getConnection()->executeStatement(
+            'UPDATE user SET kudos = kudos + :delta WHERE id = :id',
+            ['delta' => $delta, 'id' => $user->getId()]
+        );
+
+        return (int) $this->getEntityManager()->getConnection()->fetchOne(
+            'SELECT kudos FROM user WHERE id = :id',
+            ['id' => $user->getId()]
+        );
     }
 
 

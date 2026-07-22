@@ -208,37 +208,30 @@ final class BeatmapsetsController extends AbstractController
             return $this->json(['error' => "You can't favorite your own beatmap!"], Response::HTTP_FORBIDDEN);
         }
 
-        $existing = $favoriteRepo->findOneBy(['user' => $user, 'beatmapset' => $beatmapset]);
-        $delta = $existing ? -1 : 1;
+        return $em->wrapInTransaction(function () use ($em, $favoriteRepo, $userRepository, $beatmapset, $user) {
+            $existing = $favoriteRepo->findOneBy(['user' => $user, 'beatmapset' => $beatmapset]);
+            $delta = $existing ? -1 : 1;
 
-        if ($existing) {
-            $em->remove($existing);
-        } else {
-            $favorite = new FavoriteBeatmapset();
-            $favorite->setUser($user);
-            $favorite->setBeatmapset($beatmapset);
-            $favorite->setCreatedAt(new \DateTimeImmutable());
-            $em->persist($favorite);
-        }
+            if ($existing) {
+                $em->remove($existing);
+            } else {
+                $favorite = new FavoriteBeatmapset();
+                $favorite->setUser($user);
+                $favorite->setBeatmapset($beatmapset);
+                $favorite->setCreatedAt(new \DateTimeImmutable());
+                $em->persist($favorite);
+            }
 
-        try {
             $em->flush();
 
-        } catch (UniqueConstraintViolationException) {
-            // Lost a race to favorite the same map twice, treat as already-favorited
+            $newFavoriteCount = $favoriteRepo->incrementFavoriteCount($beatmapset, $delta);
+            $userRepository->incrementKudosCount($beatmapset->getAuthor(), $delta);
+
             return $this->json([
-                'favorited' => true,
-                'favoriteCount' => $beatmapset->getFavorites(),
+                'favorited' => $delta === 1,
+                'favoriteCount' => $newFavoriteCount,
             ]);
-        }
-
-        $favoriteRepo->incrementFavoriteCount($beatmapset, $delta);
-        $userRepository->incrementKudosCount($beatmapset->getAuthor(), $delta);
-
-        return $this->json([
-            'favorited' => $delta === 1,
-            'favoriteCount' => $beatmapset->getFavorites() + $delta
-        ]);
+        });
     }
 
     #[Route('/api/maps/{id}/feature', methods: ['POST'])]
