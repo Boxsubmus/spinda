@@ -198,6 +198,7 @@ final class BeatmapsetsController extends AbstractController
         $id,
         BeatmapsetRepository $repository,
         FavoriteBeatmapsetRepository $favoriteRepo,
+        UserRepository $userRepository,
         EntityManagerInterface $em): Response
     {
         $beatmapset = $repository->find($id);
@@ -232,6 +233,7 @@ final class BeatmapsetsController extends AbstractController
         }
 
         $favoriteRepo->incrementFavoriteCount($beatmapset, $delta);
+        $userRepository->incrementKudosCount($beatmapset->getAuthor(), $delta);
 
         return $this->json([
             'favorited' => $delta === 1,

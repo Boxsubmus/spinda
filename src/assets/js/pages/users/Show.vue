@@ -70,7 +70,7 @@ async function saveAboutMe() {
 <div class="bg-zinc-800 rounded-2xl overflow-hidden shadow basic-border">
     <div
         class="h-64 bg-center bg-cover bg-[radial-gradient(circle_at_center,#1f2937,transparent_70%)]"
-        style="background-image: url('https://pbs.twimg.com/profile_banners/383832535/1488939982/1500x500');">
+        style="background-image: url('https://pbs.twimg.com/profile_banners/1403615810610941954/1781162438/1500x500');">
     </div>
 
     <div class="flex flex-row gap-6 h-28 basic-border-t">
@@ -103,7 +103,7 @@ async function saveAboutMe() {
 
     <div class="flex flex-col">
         <div class="bg-zinc-800 rounded-2xl overflow-hidden shadow p-4 basic-border">
-            <div class="p-2 flex flex-col gap-2">
+            <div class="p-2 flex flex-col gap-2 w-55">
                 <div>
                     <div v-if="user.isOnline">
                         <span class="text-green-300 font-semibold">ONLINE</span>
@@ -116,14 +116,23 @@ async function saveAboutMe() {
                     </div>
                     <hr class="h-px text-white/40 mt-2">
                 </div>
-                <div>
-                    <i class="fas fa-calendar mr-2"></i>
-                    Joined
+                <div class="x justify-between">
+                    <span>
+                    joined:
+                    </span>
                     <DateTimeSpan :dateTime="user.createdAt" />
                 </div>
-                <div>
-                    <i class="fas fa-hammer mr-1"></i>
-                    {{ user.mappingPoints }} mapping points
+                <div class="x justify-between">
+                    <span>ranked score:</span>
+                    0
+                </div>
+                <div class="x justify-between">
+                    <span>mapping points:</span>
+                    {{ user.mappingPoints }}
+                </div>
+                <div class="x justify-between">
+                    <span>kudos:</span>
+                    {{ user.kudos }}
                 </div>
             </div>
         </div>

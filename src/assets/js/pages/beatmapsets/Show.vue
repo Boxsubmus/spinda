@@ -178,7 +178,7 @@ import DescriptionEdit from './DescriptionEdit.vue';
                     <form @submit.prevent="favorite">
                     <Tooltip text="You cannot favorite your own map!" position="top" :disabled="!isOwnProfile">
                         <ActionButton
-                            :label="isFavorited ? 'Un-favorite' : 'Favorite'"
+                            :label="isFavorited ? 'Un-kudos' : 'Kudos'"
                             :icon="isFavorited ? 'fas fa-heart-broken' : 'fas fa-heart'"
                             class="bg-pink-500 hover:bg-pink-400"
                             type="submit"

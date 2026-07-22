@@ -37,7 +37,7 @@ class User implements UserInterface
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['default' => 0])]
     private ?int $mappingPoints = null;
 
     #[ORM\Column(length: 2)]
@@ -72,6 +72,9 @@ class User implements UserInterface
      */
     #[ORM\OneToMany(targetEntity: FavoriteBeatmapset::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $favoriteBeatmapsets;
+
+    #[ORM\Column(options: ['default' => 0])]
+    private ?int $kudos = null;
 
     public function __construct()
     {
@@ -382,6 +385,18 @@ class User implements UserInterface
                 $favoriteBeatmapset->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getKudos(): ?int
+    {
+        return $this->kudos;
+    }
+
+    public function setKudos(int $kudos): static
+    {
+        $this->kudos = $kudos;
 
         return $this;
     }

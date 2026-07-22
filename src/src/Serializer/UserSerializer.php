@@ -23,6 +23,7 @@ class UserSerializer
             'countryFlagUrl' => $user->getCountryFlagUrl(),
 
             'mappingPoints' => $user->getMappingPoints(),
+            'kudos' => $user->getKudos(),
 
             'aboutMe' => $user->getAboutMe(),
 

@@ -67,3 +67,8 @@
 .beatmapset-status-list {
   @apply py-0 px-3 text-shadow-none rounded-3xl text-center text-zinc-800 font-bold inline-flex items-center justify-center shadow-xl;
 }
+
+.x {
+  display: flex;
+  flex-direction: row;
+}
