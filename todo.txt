@@ -3,7 +3,7 @@
 * possible beatmap upload exploit: two mapsets that have the same content will have the same hash, so deleting one could delete both
 * mapset covers need to be resized (one for small and large I think...)
 * navigating forward and backward after doing something (like favoriting a mapset) doesn't keep your state
-* add basic mapping leaderboards
+* Add rate limit to downloading
 
 # LATER
 ----------------------------------------------------------
