@@ -344,4 +344,9 @@ private function encodeJpg(\GdImage $image): string
             );
         }
     }
+
+    public function fileSize(string $path): ?int
+    {
+        return $this->storage->fileSize($path);
+    }
 }

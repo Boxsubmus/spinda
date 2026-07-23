@@ -162,6 +162,7 @@ import DescriptionEdit from './DescriptionEdit.vue';
                     <ActionButton
                         label="Download"
                         icon="fas fa-download"
+                        :url="'/maps/' + beatmapset.id + '/download'"
                     />
 
                     <form @submit.prevent="feature">
