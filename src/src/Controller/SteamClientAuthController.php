@@ -11,12 +11,14 @@ use App\Security\SteamTicketAuthenticator;
 use App\Service\GeoIpService;
 use App\Service\SessionTrackingService;
 use Doctrine\ORM\EntityManagerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
+
+use Symfony\Component\Uid\Uuid;
 
 class SteamClientAuthController extends AbstractController
 {
@@ -24,7 +26,7 @@ class SteamClientAuthController extends AbstractController
         private \Symfony\Contracts\HttpClient\HttpClientInterface $httpClient,
         private UserRepository $userRepository,
         private EntityManagerInterface $em,
-        private CsrfTokenManagerInterface $csrfTokenManager,
+        private JWTTokenManagerInterface $jwtManager,
         private UserAuthenticatorInterface $userAuthenticator,
         private SteamTicketAuthenticator $steamTicketAuthenticator,
         private GeoIpService $geoIpService,
@@ -55,26 +57,23 @@ class SteamClientAuthController extends AbstractController
 
     private function logIn(Request $request, User $user): JsonResponse
     {
-        $this->userAuthenticator->authenticateUser($user, $this->steamTicketAuthenticator, $request);
-
-        // Update last seen at when opening the game as that counts as "online"
         $user->setLastSeenAt(new \DateTimeImmutable());
         $this->em->persist($user);
+        $this->em->flush();
 
-        // Regenerate the session ID to prevent fixation and avoid PK collisions
-        // in UserSession when a still-valid cookie survives a relaunch.
-        $session = $request->getSession();
-        $oldSessionId = $session->getId();
-        $session->migrate(true);
-        $newSessionId = $session->getId();
-        
-        $this->sessionTrackingService->track($oldSessionId, $newSessionId, $user, "game");
+        $jti = Uuid::v4()->toRfc4122();
+
+        $token = $this->jwtManager->createFromPayload($user, [
+            'jti' => $jti,
+        ]);
+
+        // $this->sessionTrackingService->track(null, $jti, $user, 'game');
 
         return $this->json([
             'result' => SteamAuthResult::SUCCESS->value,
             'user_id' => $user->getId(),
             'username' => $user->getUsername(),
-            'csrf_token' => $this->csrfTokenManager->getToken('steam_client')->getValue(),
+            'access_token' => $token,
         ]);
     }
 

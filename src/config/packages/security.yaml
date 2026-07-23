@@ -21,6 +21,12 @@ security:
             pattern: ^/(_profiler|_wdt|assets|build)/
             security: false
 
+        steam_client_api:
+            pattern: ^/api/
+            stateless: true
+            jwt: ~
+            provider: app_user_provider
+
         main:
             pattern : ^/
             lazy: true
